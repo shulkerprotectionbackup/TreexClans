@@ -1,5 +1,6 @@
 package me.jetby.treexclans.addons;
 
+import lombok.Getter;
 import me.jetby.treexclans.TreexClans;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
@@ -8,15 +9,30 @@ import org.jetbrains.annotations.NotNull;
 import java.io.File;
 import java.io.IOException;
 
-
+@Getter
 public abstract class TreexAddon {
 
     protected TreexClans plugin;
     protected File dataFolder;
+    protected String name;
+    protected String author;
+    protected String version;
+    protected String description;
 
-    public final void initialize(@NotNull TreexClans plugin, @NotNull File dataFolder) {
+    public final void initialize(
+            @NotNull TreexClans plugin,
+            @NotNull File dataFolder,
+            String name,
+            String author,
+            String version,
+            String description
+            ) {
         this.plugin = plugin;
         this.dataFolder = dataFolder;
+        this.name = name;
+        this.author = author;
+        this.version = version;
+        this.description = description;
 
         if (!this.dataFolder.exists()) {
             this.dataFolder.mkdirs();
@@ -24,20 +40,6 @@ public abstract class TreexAddon {
     }
 
 
-    public abstract String getName();
-
-
-    public abstract String getVersion();
-
-
-    public String getAuthor() {
-        return "Unknown";
-    }
-
-
-    public String getDescription() {
-        return "No description provided";
-    }
 
 
     public abstract void onEnable();
@@ -46,23 +48,18 @@ public abstract class TreexAddon {
     public abstract void onDisable();
 
 
-    public TreexClans getPlugin() {
+    public TreexClans getClansPlugin() {
         return plugin;
     }
 
-    public File getDataFolder() {
-        return dataFolder;
-    }
-
-
-    public FileConfiguration getConfig(@NotNull String fileName) {
-        File configFile = new File(dataFolder, fileName);
+    public FileConfiguration getConfig() {
+        File configFile = new File(dataFolder, "config.yml");
 
         if (!configFile.exists()) {
             try {
                 configFile.createNewFile();
             } catch (IOException e) {
-                plugin.getLogger().severe("Failed to create config file: " + fileName);
+                plugin.getLogger().severe("Failed to create config file: config.yml");
                 e.printStackTrace();
             }
         }
@@ -71,40 +68,14 @@ public abstract class TreexAddon {
     }
 
 
-    public void saveConfig(@NotNull String fileName, @NotNull FileConfiguration config) {
-        File configFile = new File(dataFolder, fileName);
+    public void saveConfig() {
+        File configFile = new File(dataFolder, "config.yml");
 
         try {
-            config.save(configFile);
+            getConfig().save(configFile);
         } catch (IOException e) {
-            plugin.getLogger().severe("Failed to save config file: " + fileName);
+            plugin.getLogger().severe("Failed to save config file: config.yml");
             e.printStackTrace();
         }
-    }
-
-    public File createFile(@NotNull String fileName) throws IOException {
-        File file = new File(dataFolder, fileName);
-
-        if (!file.exists()) {
-            file.createNewFile();
-        }
-
-        return file;
-    }
-
-
-    public File createFolder(@NotNull String folderName) {
-        File folder = new File(dataFolder, folderName);
-
-        if (!folder.exists()) {
-            folder.mkdirs();
-        }
-
-        return folder;
-    }
-
-
-    public File getFile(@NotNull String path) {
-        return new File(dataFolder, path);
     }
 }

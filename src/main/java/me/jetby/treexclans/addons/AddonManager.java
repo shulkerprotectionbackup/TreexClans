@@ -125,7 +125,12 @@ public class AddonManager {
             }
 
             TreexAddon addon = (TreexAddon) mainClass.getDeclaredConstructor().newInstance();
-            addon.initialize(plugin, configFolder);
+            addon.initialize(plugin, configFolder,
+                    addonYaml.getString("name", "Untitled"),
+                    addonYaml.getString("author", "Unknown"),
+                    addonYaml.getString("version", "1.0"),
+                    addonYaml.getString("description", "")
+                    );
             addon.onEnable();
 
             loadedAddons.put(addon.getName(), addon);
