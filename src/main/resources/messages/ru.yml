@@ -115,7 +115,7 @@ clan-you-was-kicked:
 clan-invite:
   - "[message] {prefix} &#17FF35Запрос на вступление в клан игроку &l{target} &r&#17FF35успешно отправлен."
 clan-player-already-in-clan:
-  - "[message} {prefix} &7Этот игрок уже в клане"
+  - "[message] {prefix} &7Этот игрок уже в клане"
 clan-invite-limit:
   - "[message] {prefix} &cДостигнут лимит участников в клане"
 clan-setrank:

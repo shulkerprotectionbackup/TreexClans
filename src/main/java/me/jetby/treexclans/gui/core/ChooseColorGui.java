@@ -10,12 +10,13 @@ import me.jetby.treexclans.gui.Menu;
 import me.jetby.treexclans.gui.Gui;
 import org.bukkit.Color;
 import org.bukkit.entity.Player;
-import org.bukkit.event.inventory.InventoryClickEvent;
+
+import javax.annotation.Nullable;
 
 public class ChooseColorGui extends Gui {
 
     private final Member target;
-    public ChooseColorGui(TreexClans plugin, Menu menu, Player player, Clan clan, Member target) {
+    public ChooseColorGui(TreexClans plugin, Menu menu, Player player, Clan clan, @Nullable Member target) {
         super(plugin, menu, player, clan);
         this.target = target;
         registerButtons();
@@ -33,6 +34,10 @@ public class ChooseColorGui extends Gui {
 
             if (target!=null) {
                 getPlugin().getClanManager().setColor(member, target, color);
+                if (getPlugin().getGlow().hasObserver(getPlayer())) {
+                    getPlugin().getGlow().removeObserver(getPlayer());
+                    getPlugin().getGlow().addObserver(getPlayer(), getClan().getMembers());
+                }
                 return;
             }
 

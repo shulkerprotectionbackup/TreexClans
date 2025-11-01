@@ -17,6 +17,7 @@ public record Button(
         int customModelData,
         boolean enchanted,
         boolean freeSlot,
+        boolean hideAttributes,
         ItemStack itemStack,
         List<ViewRequirement> viewRequirements,
         List<ButtonCommand> buttonCommands,

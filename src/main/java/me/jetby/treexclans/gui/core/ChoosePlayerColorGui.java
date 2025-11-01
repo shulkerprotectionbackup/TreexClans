@@ -2,8 +2,6 @@ package me.jetby.treexclans.gui.core;
 
 import com.jodexindustries.jguiwrapper.api.item.ItemWrapper;
 import com.jodexindustries.jguiwrapper.gui.advanced.GuiItemController;
-import me.jetby.treex.text.Colorize;
-import me.jetby.treex.text.Papi;
 import me.jetby.treexclans.TreexClans;
 import me.jetby.treexclans.clan.Clan;
 import me.jetby.treexclans.clan.Member;
@@ -12,7 +10,9 @@ import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.entity.Player;
+import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.meta.ItemMeta;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
@@ -21,13 +21,9 @@ import java.util.function.Consumer;
 import java.util.stream.Collectors;
 
 public class ChoosePlayerColorGui extends Gui {
-    public ChoosePlayerColorGui(TreexClans plugin, @Nullable Menu menu, Player player, Clan clan, Member target) {
+    public ChoosePlayerColorGui(TreexClans plugin, @Nullable Menu menu, Player player, Clan clan) {
         super(plugin, menu, player, clan);
         registerButtons();
-
-        size(menu.size());
-        type(menu.inventoryType());
-        title(Papi.setPapi(player, menu.title()));
 
         setupMembersPagination();
 
@@ -60,7 +56,7 @@ public class ChoosePlayerColorGui extends Gui {
 
     @Override
     public boolean cancelRegistration(Player player, @javax.annotation.Nullable Button button) {
-        return button!=null && button.type().equals("players");
+        return button != null && button.type().equals("players");
     }
 
     private void setupMembersPagination() {
@@ -107,20 +103,19 @@ public class ChoosePlayerColorGui extends Gui {
 
                 OfflinePlayer target = Bukkit.getOfflinePlayer(member.getUuid());
 
+                setCustomPlaceholder("%target_name%", target.getName());
+
                 consumers[i] = builder -> {
                     ItemStack itemStack = SkullCreator.itemFromName(target.getName());
+                    ItemMeta meta = itemStack.getItemMeta();
+                    meta.addItemFlags(ItemFlag.HIDE_DYE);
+                    itemStack.setItemMeta(meta);
+
                     ItemWrapper wrapper = new ItemWrapper(itemStack);
 
-                    String rawDisplayName = memberButton.displayName();
-                    String processedDisplayName = replaceMemberPlaceholders(rawDisplayName, member);
-                    processedDisplayName = Papi.setPapi(getPlayer(), processedDisplayName);
-                    wrapper.displayName(Colorize.text(processedDisplayName));
-
-                    List<String> rawLore = memberButton.lore();
-                    List<String> processedLore = rawLore.stream()
-                            .map(l -> replaceMemberPlaceholders(l, member))
-                            .map(l -> Papi.setPapi(getPlayer(), l))
-                            .map(Colorize::text)
+                    wrapper.displayName(applyDefaultPlaceholders(memberButton.displayName()));
+                    List<String> processedLore = memberButton.lore().stream()
+                            .map(this::applyDefaultPlaceholders)
                             .collect(Collectors.toList());
                     wrapper.lore(processedLore);
 
@@ -130,8 +125,9 @@ public class ChoosePlayerColorGui extends Gui {
 
                     builder.defaultItem(wrapper);
                     builder.slots(slot);
-                    builder.defaultClickHandler((event, ctrl) ->  {
+                    builder.defaultClickHandler((event, ctrl) -> {
                         event.setCancelled(true);
+
                         Bukkit.getScheduler().runTaskLater(getPlugin(), () ->
                                 GuiFactory.create(
                                                 getPlugin(),
@@ -144,21 +140,4 @@ public class ChoosePlayerColorGui extends Gui {
             addPage(consumers);
         }
     }
-
-    private String replaceMemberPlaceholders(String text, Member member) {
-        OfflinePlayer offlinePlayer = Bukkit.getOfflinePlayer(member.getUuid());
-        text = text.replace("%joined-at%", getPlugin().getFormatTime().stringFormat(System.currentTimeMillis() - member.getJoinedAt()));
-        text = text.replace("%last-online%", getPlugin().getClanManager().getLastOnlineFormatted(member));
-        text = text.replace("%player_name%", offlinePlayer.getName());
-        text = text.replace("%rank%", member.getRank().name());
-        text = text.replace("%kills%", String.valueOf(member.getKills()));
-        text = text.replace("%deaths%", String.valueOf(member.getDeaths()));
-        text = text.replace("%war_wins%", String.valueOf(member.getWarWins()));
-        text = text.replace("%war_participated%", String.valueOf(member.getWarParticipated()));
-        text = text.replace("%war_loses%", String.valueOf(member.getWarLoses()));
-        text = text.replace("%exp%", String.valueOf(member.getExp()));
-        text = text.replace("%coin%", String.valueOf(member.getCoin()));
-        return text;
-    }
-
 }

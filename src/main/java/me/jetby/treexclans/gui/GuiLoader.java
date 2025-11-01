@@ -14,6 +14,7 @@ import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.event.inventory.ClickType;
 import org.bukkit.event.inventory.InventoryType;
+import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.inventory.meta.LeatherArmorMeta;
@@ -113,6 +114,7 @@ public class GuiLoader {
                     int customModelData = itemSection.getInt("custom-model-data", 0);
                     boolean enchanted = itemSection.getBoolean("enchanted", false);
                     boolean freeSlot = itemSection.getBoolean("free-slot", false);
+                    boolean hideAttributes = itemSection.getBoolean("hide_attributes", false);
                     int priority = itemSection.getInt("priority", 0);
                     String type = itemSection.getString("type", "default");
                     String defaultMaterial;
@@ -140,6 +142,8 @@ public class GuiLoader {
                     itemStack.setAmount(amount);
                     ItemMeta meta = itemStack.getItemMeta();
                     if (meta!=null) {
+                        if (hideAttributes) meta.addItemFlags(ItemFlag.HIDE_ATTRIBUTES);
+                        meta.addItemFlags(ItemFlag.HIDE_DYE);
                         meta.setDisplayName(Colorize.text(displayName));
                         meta.setLore(Colorize.list(lore));
                         meta.setCustomModelData(customModelData);
@@ -151,7 +155,9 @@ public class GuiLoader {
 
                     for (Integer slot : slots) {
 
-                        buttons.add(new Button(key, displayName, rgb, openGui, lore, slot, amount, customModelData, enchanted, freeSlot, itemStack,
+                        buttons.add(new Button(key, displayName, rgb,
+                                openGui, lore, slot, amount, customModelData,
+                                enchanted, freeSlot, hideAttributes, itemStack,
                                 requirements(itemSection, slot),
                                 loadCommands(itemSection),
                                 priority, type));

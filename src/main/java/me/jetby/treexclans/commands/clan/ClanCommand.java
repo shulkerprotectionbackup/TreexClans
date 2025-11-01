@@ -54,7 +54,7 @@ public class ClanCommand implements CommandExecutor, TabCompleter {
                 for (Map.Entry<String, List<String>> entry : menuArgs.entrySet()) {
                     if (entry.getValue().contains(args[0])) {
                         GuiFactory.create(plugin, plugin.getGuiLoader().getMenus().get(entry.getKey())
-                                , player, clan, null, null, null).open(player);
+                                , player, clan).open(player);
                         return true;
                     }
                 }

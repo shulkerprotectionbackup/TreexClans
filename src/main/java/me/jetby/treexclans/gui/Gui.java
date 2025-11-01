@@ -94,7 +94,6 @@ public abstract class Gui extends PaginatedAdvancedGui implements Listener {
         text = text.replace("%clan_coin%", String.valueOf(getClan().getMember(player.getUniqueId()).getCoin()));
         for (Map.Entry<String, String> entry : customPlaceholders.entrySet()) {
             text = text.replace(entry.getKey(), entry.getValue());
-            customPlaceholders.remove(entry.getKey());
         }
         return text;
     }

@@ -8,6 +8,7 @@ import me.jetby.treexclans.clan.rank.Rank;
 import me.jetby.treexclans.functions.tops.TopType;
 import me.jetby.treexclans.gui.core.*;
 import org.bukkit.entity.Player;
+import org.jetbrains.annotations.NotNull;
 
 import javax.annotation.Nullable;
 import java.util.HashMap;
@@ -18,9 +19,9 @@ public class GuiFactory {
     private final Map<String, Gui> customGuis = new HashMap<>();
 
     public Gui create(TreexClans plugin,
-                      Menu menu,
-                      Player player,
-                      Clan clan,
+                      @NotNull Menu menu,
+                      @NotNull Player player,
+                      @NotNull Clan clan,
                       Object... customObjects) {
         switch (GuiType.valueOf(menu.type())) {
             case MEMBERS -> {
@@ -31,6 +32,8 @@ public class GuiFactory {
                     for (Object obj : customObjects) {
                         if (obj instanceof Member target) return new ChooseColorGui(plugin, menu, player, clan, target);
                     }
+                } else {
+                    return new ChooseColorGui(plugin, menu, player, clan, null);
                 }
             }
             case CHEST -> {
@@ -49,13 +52,7 @@ public class GuiFactory {
                     }
                 }
             }
-            case CHOOSE_PLAYER_COLOR -> {
-                if (customObjects!=null) {
-                    for (Object obj : customObjects) {
-                        if (obj instanceof Member target) return new ChoosePlayerColorGui(plugin, menu, player, clan, target);
-                    }
-                }
-            }
+            case CHOOSE_PLAYER_COLOR -> {return new ChoosePlayerColorGui(plugin, menu, player, clan);}
             case MENU -> {
                 return new DefaultGui(plugin, menu, player, clan);
             }
