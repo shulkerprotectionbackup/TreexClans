@@ -7,6 +7,7 @@ import lombok.Getter;
 import lombok.Setter;
 import me.jetby.treex.tools.LogInitialize;
 import me.jetby.treex.tools.log.Logger;
+import me.jetby.treexclans.addons.AddonManager;
 import me.jetby.treexclans.clan.Clan;
 import me.jetby.treexclans.clan.Member;
 import me.jetby.treexclans.commands.admin.AdminCommand;
@@ -67,6 +68,8 @@ public final class TreexClans extends JavaPlugin {
     private QuestsLoader questsLoader;
     private QuestManager questManager;
     private TreexClansPlaceholders treexClansPlaceholders;
+
+    private AddonManager addonManager;
 
     @Override
     public void onLoad() {
@@ -136,10 +139,15 @@ public final class TreexClans extends JavaPlugin {
         getServer().getPluginManager().registerEvents(new ClanListeners(this), this);
         getServer().getPluginManager().registerEvents(new QuestsListeners(this), this);
 
+        addonManager = new AddonManager(this);
+        addonManager.loadAddons();
     }
 
     @Override
     public void onDisable() {
+        if (addonManager != null) {
+            addonManager.unloadAllAddons();
+        }
         if (storage != null) storage.save();
         disableGlowForAll();
         if (treexClansPlaceholders!=null) {

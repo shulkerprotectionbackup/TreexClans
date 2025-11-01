@@ -48,6 +48,7 @@ public class RankPermissionsGui extends Gui {
         RankPerms perm = RankPerms.valueOf(permName);
 
         if (!getClan().getMember(player.getUniqueId()).getRank().perms().contains(RankPerms.SETRANK)) return;
+        if (getClan().getMember(player.getUniqueId()).getRank().equals(rank)) return;
         if (!getClan().getLeader().getRank().perms().contains(perm)) return;
         if (!getClan().getMember(player.getUniqueId()).getRank().perms().contains(perm)) return;
 

@@ -11,8 +11,6 @@ import me.jetby.treexclans.gui.core.*;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 
-import javax.annotation.Nullable;
-
 @UtilityClass
 public class GuiFactory {
 
@@ -34,67 +32,69 @@ public class GuiFactory {
             return customGui;
         }
 
+        TreexClans.LOGGER.warn("GUI type '" + guiType + "' not found! Returning DefaultGui instead.");
         return new DefaultGui(plugin, menu, player, clan);
     }
 
-    /**
-     * Создает встроенные типы GUI
-     */
     private Gui createBuiltInGui(TreexClans plugin,
                                  @NotNull Menu menu,
                                  @NotNull Player player,
                                  @NotNull Clan clan,
                                  String guiType,
                                  Object... customObjects) {
-        return switch (GuiType.valueOf(guiType)) {
-            case MEMBERS -> new MembersGui(plugin, menu, player, clan);
+        try {
+            GuiType type = GuiType.valueOf(guiType);
 
-            case CHOOSE_COLOR -> {
-                if (customObjects != null) {
-                    for (Object obj : customObjects) {
-                        if (obj instanceof Member target) {
-                            yield new ChooseColorGui(plugin, menu, player, clan, target);
+            return switch (type) {
+                case MEMBERS -> new MembersGui(plugin, menu, player, clan);
+                case CHOOSE_COLOR -> {
+                    if (customObjects != null) {
+                        for (Object obj : customObjects) {
+                            if (obj instanceof Member target) {
+                                yield new ChooseColorGui(plugin, menu, player, clan, target);
+                            }
                         }
                     }
+                    yield new ChooseColorGui(plugin, menu, player, clan, null);
                 }
-                yield new ChooseColorGui(plugin, menu, player, clan, null);
-            }
 
-            case CHEST -> new ChestGui(plugin, menu, player, clan);
+                case CHEST -> new ChestGui(plugin, menu, player, clan);
 
-            case QUESTS -> new QuestsGui(plugin, menu, player, clan);
+                case QUESTS -> new QuestsGui(plugin, menu, player, clan);
 
-            case RANKS -> new RanksGui(plugin, menu, player, clan);
+                case RANKS -> new RanksGui(plugin, menu, player, clan);
 
-            case RANK_PERMISSIONS -> {
-                if (customObjects != null) {
-                    for (Object obj : customObjects) {
-                        if (obj instanceof Rank rank) {
-                            yield new RankPermissionsGui(plugin, menu, player, clan, rank);
+                case RANK_PERMISSIONS -> {
+                    if (customObjects != null) {
+                        for (Object obj : customObjects) {
+                            if (obj instanceof Rank rank) {
+                                yield new RankPermissionsGui(plugin, menu, player, clan, rank);
+                            }
                         }
                     }
+                    yield null;
                 }
-                yield null;
-            }
 
-            case CHOOSE_PLAYER_COLOR -> new ChoosePlayerColorGui(plugin, menu, player, clan);
+                case CHOOSE_PLAYER_COLOR -> new ChoosePlayerColorGui(plugin, menu, player, clan);
 
-            case MENU -> new DefaultGui(plugin, menu, player, clan);
+                case MENU, DEFAULT -> new DefaultGui(plugin, menu, player, clan);
 
-            case TOP_CLANS -> {
-                if (customObjects != null) {
-                    TopType topType = null;
-                    int num = 1;
-                    for (Object obj : customObjects) {
-                        if (obj instanceof TopType t) topType = t;
-                        if (obj instanceof Integer i) num = i;
+                case TOP_CLANS -> {
+                    if (customObjects != null) {
+                        TopType topType = null;
+                        int num = 1;
+                        for (Object obj : customObjects) {
+                            if (obj instanceof TopType t) topType = t;
+                            if (obj instanceof Integer i) num = i;
+                        }
+                        yield new TopClansGui(plugin, menu, player, clan, topType, num);
                     }
-                    yield new TopClansGui(plugin, menu, player, clan, topType, num);
+                    yield new TopClansGui(plugin, menu, player, clan, null, 1);
                 }
-                yield null;
-            }
-
-            default -> null;
-        };
+            };
+        } catch (IllegalArgumentException e) {
+            return null;
+        }
     }
+
 }

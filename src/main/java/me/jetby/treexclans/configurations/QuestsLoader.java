@@ -41,13 +41,14 @@ public class QuestsLoader {
 
                 String name = quest.getString("name");
                 String description = quest.getString("description");
+                List<String> rewardsDescription = quest.getStringList("rewards-description");
                 QuestProgressType progressType = QuestProgressType.valueOf(quest.getString("progress", "GLOBAL").toUpperCase());
                 int target = quest.getInt("target");
                 List<String> globalRewards = quest.getStringList("global-rewards");
                 List<String> rewards = quest.getStringList("rewards");
                 List<String> disabledWorlds = quest.getStringList("disabled-worlds");
 
-                quests.put(key, new Quest(key, name, description, progressType, questType, questProperty, target, globalRewards, rewards, disabledWorlds));
+                quests.put(key, new Quest(key, name, description, rewardsDescription, progressType, questType, questProperty, target, globalRewards, rewards, disabledWorlds));
 
             }
         }

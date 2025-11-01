@@ -42,7 +42,7 @@ public class DepositSubcommand implements Subcommand {
             }
             double balance = Double.parseDouble(args[0]);
             if (plugin.getEconomy().has(player, balance)) {
-                if (clan.getLevel().maxBalance()<balance) {
+                if (clan.getLevel().maxBalance()<balance || clan.getBalance()>balance) {
                     plugin.getLang().sendMessage(player, clan, "clan-balance-limit",
                             new Lang.ReplaceString("{sum}", String.valueOf(balance)),
                             new Lang.ReplaceString("{max-balance}", String.valueOf(clan.getLevel().maxBalance()))

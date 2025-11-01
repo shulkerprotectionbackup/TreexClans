@@ -94,7 +94,7 @@ public class YAML implements Storage {
 
 
                     }
-                    ranks.put(key, new Rank(key, displayName, perms));
+                    ranks.put(key.toLowerCase(), new Rank(key.toLowerCase(), displayName, perms));
                 }
             } else {
                 ranks.putAll(plugin.getCfg().getDefaultRanks());

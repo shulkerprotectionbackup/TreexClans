@@ -7,6 +7,7 @@ public record Quest(
         String id,
         String name,
         String description,
+        List<String> rewardsDescription,
         QuestProgressType progressType,
         QuestType questType,
         @Nullable String questProperty,

@@ -2,12 +2,12 @@ package me.jetby.treexclans.gui.core;
 
 import com.jodexindustries.jguiwrapper.api.item.ItemWrapper;
 import com.jodexindustries.jguiwrapper.gui.advanced.GuiItemController;
-import me.jetby.treex.text.Colorize;
 import me.jetby.treex.text.Papi;
 import me.jetby.treexclans.TreexClans;
 import me.jetby.treexclans.clan.Clan;
 import me.jetby.treexclans.clan.Member;
 import me.jetby.treexclans.functions.quests.Quest;
+import me.jetby.treexclans.functions.quests.QuestProgressType;
 import me.jetby.treexclans.gui.*;
 import me.jetby.treexclans.gui.Gui;
 import org.bukkit.Material;
@@ -57,16 +57,16 @@ public class QuestsGui extends Gui {
         List<Integer> questSlots = questButtons.stream()
                 .map(Button::slot)
                 .toList();
-        Button questButton = questButtons.get(0);
+        Button button = questButtons.get(0);
         int itemsPerPage = questSlots.size();
         List<Quest> questsList = new ArrayList<>();
-        if ("all_quests".equals(questButton.type())) {
+        if ("all_quests".equals(button.type())) {
             for (Set<Quest> quests : getPlugin().getQuestsLoader().getCategories().values()) {
                 questsList.addAll(quests);
             }
 
         } else {
-            String catId = questButton.type().substring(9);
+            String catId = button.type().substring(9);
             Set<Quest> cat = getPlugin().getQuestsLoader().getCategories().get(catId);
             if (cat == null) return;
             questsList = cat.stream().toList();
@@ -88,26 +88,37 @@ public class QuestsGui extends Gui {
                     continue;
                 }
                 Quest quest = questsList.get(questIndex);
+                Member member = getClan().getMember(getPlayer().getUniqueId());
+                int progress = getPlugin().getQuestManager().getProgress(member, quest);
                 consumers[i] = builder -> {
-                    ItemStack itemStack = questButton.itemStack().clone();
-                    ItemWrapper wrapper = new ItemWrapper(itemStack);
-                    String rawDisplayName = questButton.displayName();
-                    String processedDisplayName = replaceQuestPlaceholders(rawDisplayName, quest, getClan().getMember(getPlayer().getUniqueId()));
-                    processedDisplayName = Papi.setPapi(getPlayer(), processedDisplayName);
-                    wrapper.displayName(Colorize.text(processedDisplayName));
-                    List<String> rawLore = questButton.lore();
-                    List<String> processedLore = rawLore.stream()
-                            .map(l -> replaceQuestPlaceholders(l, quest, getClan().getMember(getPlayer().getUniqueId())))
-                            .map(l -> Papi.setPapi(getPlayer(), l))
-                            .map(Colorize::text)
-                            .collect(Collectors.toList());
-                    wrapper.lore(processedLore);
-                    wrapper.customModelData(questButton.customModelData());
-                    wrapper.enchanted(questButton.enchanted());
-                    wrapper.update();
+
+                    setCustomPlaceholder("%status%", status(member, quest));
+                    setCustomPlaceholder("%quest_name%", quest.name());
+                    setCustomPlaceholder("%quest_description%", quest.description());
+                    setCustomPlaceholder("%quest_progress%", String.valueOf(progress));
+                    setCustomPlaceholder("%quest_target%", String.valueOf(quest.target()));
+                    setCustomPlaceholder("%quest_progress_type%", progressType(quest));
+
+                    ItemStack itemStack = button.itemStack().clone();
                     ItemMeta itemMeta = itemStack.getItemMeta();
                     itemMeta.getPersistentDataContainer().set(NAMESPACED_KEY, PersistentDataType.STRING, "menu_item");
                     itemStack.setItemMeta(itemMeta);
+
+                    ItemWrapper wrapper = new ItemWrapper(itemStack);
+
+                    wrapper.displayName(applyDefaultPlaceholders(button.displayName()));
+
+                    List<String> lore = new ArrayList<>(button.lore());
+                    lore.addAll(quest.rewardsDescription());
+                    wrapper.lore(lore.stream()
+                            .map(this::applyDefaultPlaceholders)
+                            .collect(Collectors.toList()));
+
+
+                    wrapper.customModelData(button.customModelData());
+                    wrapper.enchanted(button.enchanted());
+                    wrapper.update();
+
                     builder.defaultItem(wrapper);
                     builder.slots(slot);
                     builder.defaultClickHandler((event, ctrl) -> event.setCancelled(true));
@@ -118,21 +129,18 @@ public class QuestsGui extends Gui {
         }
     }
 
-    private String replaceQuestPlaceholders(String text, Quest quest, Member member) {
-        int progress = getPlugin().getQuestManager().getProgress(member, quest);
-        text = text.replace("%status%", status(member, quest));
-        text = text.replace("%quest_name%", quest.name());
-        text = text.replace("%quest_description%", quest.description());
-        text = text.replace("%quest_progress%", String.valueOf(progress));
-        text = text.replace("%quest_target%", String.valueOf(quest.target()));
-        return text;
-    }
-
     private String status(Member member, Quest quest) {
         if (getPlugin().getQuestManager().isQuestCompleted(member, quest)) {
             return getPlugin().getLang().getMessage("quest-status-completed");
         } else {
             return getPlugin().getLang().getMessage("quest-status-uncompleted");
+        }
+    }
+    private String progressType(Quest quest) {
+        if (quest.progressType().equals(QuestProgressType.INDIVIDUAL)) {
+            return getPlugin().getLang().getMessage("quest-progress-type-individual");
+        } else {
+            return getPlugin().getLang().getMessage("quest-progress-type-global");
         }
     }
 

@@ -45,6 +45,9 @@ public class SetRankSubcommand implements Subcommand {
             String rankName = args[0].toLowerCase();
             Rank rank = clan.getRanks().get(rankName);
             if (rank != null) {
+                if (plugin.getCfg().getLeaderRank().equals(rank)) {
+                    return true;
+                }
                 String targetName = args[1];
                 UUID uuid;
                 Player target = Bukkit.getPlayer(targetName);
@@ -93,7 +96,11 @@ public class SetRankSubcommand implements Subcommand {
                 }
                 return playerNames;
             } else if (args.length == 2) {
-                return clan.getRanks().keySet().stream().map(String::toLowerCase).toList();
+                return clan.getRanks().values().stream()
+                        .filter(s1 -> !plugin.getCfg().getLeaderRank().equals(s1))
+                        .map(rank -> rank.id())
+                        .map(String::toLowerCase)
+                        .toList();
             }
         }
         return null;

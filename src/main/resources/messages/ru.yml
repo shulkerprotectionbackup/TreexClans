@@ -147,27 +147,30 @@ quest-status-progress: "&eВ прогрессе"
 quest-status-uncompleted: "&cНе выполнен"
 quest-status-completed: "&aВыполнено"
 quest-status-gradual: "&eВыполните предыдущий"
+quest-progress-type-individual: "&aИндивидуальный"
+quest-progress-type-global: "&e&lГлобальный"
 
 rank-perm-yes: "&a✔"
 rank-perm-no: "&c✘"
 
+
 gui:
   tops:
     kills:
-      set: "&4&lУбийствам"
-      unset: "Убийствам"
+      set: "&6✔ Убийствам"
+      unset: "&7⏺ Убийствам"
     deaths:
-      set: "&4&lСмертям"
-      unset: "Смертям"
+      set: "&6✔ Смертям"
+      unset: "&7⏺ Смертям"
     level:
-      set: "&4&lУровню"
-      unset: "Уровню"
+      set: "&6✔ Уровню"
+      unset: "&7⏺ Уровню"
     balance:
-      set: "&4&lБалансу"
-      unset: "Балансу"
+      set: "&6✔ Балансу"
+      unset: "&7⏺ Балансу"
     members:
-      set: "&4&lУчастникам"
-      unset: "Участникам"
+      set: "&6✔ Участникам"
+      unset: "&7⏺ Участникам"
     kd:
-      set: "&4&lУ/С"
-      unset: "У/С"
+      set: "&6✔ У/С"
+      unset: "&7⏺ У/С"
