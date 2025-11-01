@@ -1,6 +1,6 @@
 id: rank-perms
 title: "&0&lПрава"
-size: 36
+size: 27
 open_permission: none
 open_commands: {}
 
@@ -54,3 +54,11 @@ Items:
     type: perm-pvp
     display_name: "&6⚐ &fПереключать pvp %pvp_status%"
 
+
+
+  back:
+    slot: 22
+    material: DARK_OAK_DOOR
+    display_name: "&6Вернуться в меню"
+    click_commands:
+      - '[open_menu] ranks'

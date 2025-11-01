@@ -12,6 +12,15 @@ listen: chest
 # category-<id>
 Items:
 
+  bs:
+    type: blocked-slot
+    material: BARRIER
+    display_name: "&c&lСлот заблокирован"
+    lore:
+      - "&7Этот слот недоступен."
+      - "&7Повысьте уровень клана,"
+      - "&7чтобы разблокировать больше слотов."
+
 
   free-slots:
     slot:

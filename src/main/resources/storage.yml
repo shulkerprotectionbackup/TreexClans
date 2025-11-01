@@ -1,42 +1,83 @@
-
-
-clan-id:
-  balance: 150000.0
-  level: 1
-  prefix: "Sexy"
-  quests-completed:
-    - id
-    - id2
-  quests-progress:
-    id: 1
-    id2: 50
-    id3:
-      uuid: 1
-  leader:
-    uuid: uuid
-    rank: leader
-    joined-at: 1700000000
-    last-online: 1700000000
-    clan-glow: true
-  glow-colors:
-    uuid:
-      - UUID;COLOR
+sexy:
   ranks:
-    member:
-      display-name: "Участник"
+    leader:
+      display-name: '&4&lЛидер'
       permissions:
-        invite: false
-        kick: false
-        base: false
-        setbase: false
-        setrank: false
-        deposit: true
-        withdraw: false
-        pvp: false
-
+        ALWAYS: true
+        PVP: true
+        SETBASE: true
+        WITHDRAW: true
+        DEPOSIT: true
+        BASE: true
+        INVITE: true
+        SETRANK: true
+        KICK: true
+    member:
+      display-name: '&7Участник'
+      permissions:
+        ALWAYS: true
+        DEPOSIT: true
+        BASE: true
+        INVITE: true
+    control:
+      display-name: '&3Управляющий'
+      permissions:
+        ALWAYS: true
+        PVP: true
+        SETBASE: true
+        WITHDRAW: true
+        DEPOSIT: true
+        BASE: true
+        INVITE: true
+        KICK: true
+  balance: 25000.0
+  level: '2'
+  exp: 100
+  pvp: false
+  quests-progress:
+    quest4:
+      29f63a14-9223-3167-a5b3-9fda6545f77c: 30
+      3f8c7e96-7614-3e00-8a0c-d3c305c2cb94: 30
+    quest2:
+      3f8c7e96-7614-3e00-8a0c-d3c305c2cb94: 500
+    quest3:
+      3f8c7e96-7614-3e00-8a0c-d3c305c2cb94: 200
+    quest1:
+      3f8c7e96-7614-3e00-8a0c-d3c305c2cb94: 50
+  quests-completed:
+    29f63a14-9223-3167-a5b3-9fda6545f77c:
+    - quest4
+    3f8c7e96-7614-3e00-8a0c-d3c305c2cb94:
+    - quest1
+    - quest2
+    - quest3
+    - quest4
+  leader:
+    uuid: 3f8c7e96-7614-3e00-8a0c-d3c305c2cb94
+    rank: leader
+    joined-at: 1762028180113
+    last-online: 1762032632200
+    clan-glow: false
+    coin: 0
+    exp: 210
+    kills: 0
+    deaths: 0
+    war-wins: 0
+    war-participated: 0
+    war-loses: 0
+    glow-colors: []
   members:
-    uuid:
-      rank: member
-      joined-at: 1700000000
-      last-online: 1700000000
-      clan-glow: true
+    29f63a14-9223-3167-a5b3-9fda6545f77c:
+      rank: control
+      joined-at: 1762028186127
+      last-online: 1762032632200
+      clan-glow: false
+      coin: 0
+      exp: 0
+      kills: 0
+      deaths: 0
+      war-wins: 0
+      war-participated: 0
+      war-loses: 0
+      glow-colors: []
+  chest: []

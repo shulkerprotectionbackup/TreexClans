@@ -52,3 +52,38 @@ Items:
       - "&6⚐ &fСнимать деньги с баланса клана %withdraw_status%"
       - "&6⚐ &fПереключать pvp %pvp_status%"
       - "&6&m                    "
+
+
+  orange:
+    material: ORANGE_STAINED_GLASS_PANE
+    slot:
+      - 0-2
+      - 6-8
+      - 27-29
+      - 33-35
+    display_name: " "
+
+  black:
+    material: BLACK_STAINED_GLASS_PANE
+    slot:
+      - 3
+      - 5
+      - 30
+      - 32
+    display_name: " "
+
+
+  gray:
+    material: GRAY_STAINED_GLASS_PANE
+    slot:
+      - 4
+    display_name: " "
+
+
+
+  back:
+    slot: 31
+    material: DARK_OAK_DOOR
+    display_name: "&6Вернуться в меню"
+    click_commands:
+      - '[open_menu] main'

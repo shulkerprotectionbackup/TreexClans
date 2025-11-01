@@ -1,5 +1,5 @@
 id: glow_color
-title: "&0&lChoose color"
+title: "&0&lВыбор цвета"
 size: 36
 open_permission: none
 open_args: {}
@@ -10,6 +10,7 @@ Items:
   white:
     slot: 9
     material: LEATHER_CHESTPLATE
+    hide_attributes: true
     type: color-WHITE
     color: WHITE
     display_name: "&fВыбрать цвет"
@@ -17,6 +18,7 @@ Items:
   silver:
     slot: 10
     material: LEATHER_CHESTPLATE
+    hide_attributes: true
     type: color-silver
     color: silver
     display_name: "&7Выбрать цвет"
@@ -24,6 +26,7 @@ Items:
   gray:
     slot: 11
     material: LEATHER_CHESTPLATE
+    hide_attributes: true
     type: color-gray
     color: gray
     display_name: "&8Выбрать цвет"
@@ -31,6 +34,7 @@ Items:
   black:
     slot: 12
     material: LEATHER_CHESTPLATE
+    hide_attributes: true
     type: color-black
     color: black
     display_name: "&0Выбрать цвет"
@@ -38,6 +42,7 @@ Items:
   MAROON:
     slot: 13
     material: LEATHER_CHESTPLATE
+    hide_attributes: true
     type: color-MAROON
     color: MAROON
     display_name: "&4Выбрать цвет"
@@ -45,6 +50,7 @@ Items:
   YELLOW:
     slot: 14
     material: LEATHER_CHESTPLATE
+    hide_attributes: true
     type: color-YELLOW
     color: YELLOW
     display_name: "&eВыбрать цвет"
@@ -52,6 +58,7 @@ Items:
   OLIVE:
     slot: 15
     material: LEATHER_CHESTPLATE
+    hide_attributes: true
     type: color-OLIVE
     color: OLIVE
     display_name: "&2Выбрать цвет"
@@ -59,6 +66,7 @@ Items:
   LIME:
     slot: 16
     material: LEATHER_CHESTPLATE
+    hide_attributes: true
     type: color-LIME
     color: LIME
     display_name: "&aВыбрать цвет"
@@ -66,6 +74,7 @@ Items:
   GREEN:
     slot: 17
     material: LEATHER_CHESTPLATE
+    hide_attributes: true
     type: color-GREEN
     color: GREEN
     display_name: "&2Выбрать цвет"
@@ -73,6 +82,7 @@ Items:
   AQUA:
     slot: 19
     material: LEATHER_CHESTPLATE
+    hide_attributes: true
     type: color-AQUA
     color: AQUA
     display_name: "&bВыбрать цвет"
@@ -80,6 +90,7 @@ Items:
   TEAL:
     slot: 20
     material: LEATHER_CHESTPLATE
+    hide_attributes: true
     type: color-TEAL
     color: TEAL
     display_name: "&3Выбрать цвет"
@@ -87,6 +98,7 @@ Items:
   BLUE:
     slot: 21
     material: LEATHER_CHESTPLATE
+    hide_attributes: true
     type: color-BLUE
     color: BLUE
     display_name: "&1Выбрать цвет"
@@ -94,6 +106,7 @@ Items:
   NAVY:
     slot: 22
     material: LEATHER_CHESTPLATE
+    hide_attributes: true
     type: color-NAVY
     color: NAVY
     display_name: "&1Выбрать цвет"
@@ -101,6 +114,7 @@ Items:
   FUCHSIA:
     slot: 23
     material: LEATHER_CHESTPLATE
+    hide_attributes: true
     type: color-FUCHSIA
     color: FUCHSIA
     display_name: "&5Выбрать цвет"
@@ -108,6 +122,7 @@ Items:
   PURPLE:
     slot: 24
     material: LEATHER_CHESTPLATE
+    hide_attributes: true
     type: color-PURPLE
     color: PURPLE
     display_name: "&dВыбрать цвет"
@@ -115,6 +130,7 @@ Items:
   ORANGE:
     slot: 25
     material: LEATHER_CHESTPLATE
+    hide_attributes: true
     type: color-ORANGE
     color: ORANGE
     display_name: "&6Выбрать цвет"

@@ -25,7 +25,7 @@ Items:
       - '19-25'
       - '28-34'
       - '37-43'
-    display_name: "&6%player_name%"
+    display_name: "&6%target_name%"
     lore:
       - "&7▶ Нажмите чтобы выбрать цвет"
 

@@ -1,5 +1,5 @@
 id: main
-title: "&0&lMain menu"
+title: "&0&lКлановое меню"
 size: 54
 open_permission: none
 open_args:
@@ -10,6 +10,17 @@ listen: menu
 
 Items:
 
+  info:
+    material: WRITABLE_BOOK
+    slot: 49
+    hide_attributes: true
+    display_name: "&6Клан %clan_prefix% &8(%clan_tag%)"
+    lore:
+      - "&6• &fЛидер: &6&l%clan_leader_name%"
+      - "&6• &fБаланс: &6&l%clan_balance%"
+      - "&6• &fОпыт: &6&l%clan_exp%&7/&c&l%clan_exp_max%"
+      - "&6• &fУровень: &6&l%clan_level%"
+
   war:
     material: NETHERITE_SWORD
     slot: 13
@@ -17,10 +28,10 @@ Items:
     display_name: "&6Клановая война"
     lore:
       - "&c&lДля использования этой функции"
-      - "&c&lкупите аддон XWar."
+      - "&c&lкупите аддон ClanWar."
     click_commands:
       - '[message] &c&lДля использования этой функции'
-      - '[message] &c&lкупите аддон XWar.'
+      - '[message] &c&lкупите аддон ClanWar.'
   chest:
     material: CHEST
     slot: 20
@@ -49,6 +60,7 @@ Items:
     material: TURTLE_HELMET
     slot: 31
     display_name: "&6Ранги"
+    hide_attributes: true
     lore:
       - "&7Нажмите чтобы открыть"
     click_commands:
@@ -57,6 +69,7 @@ Items:
     material: LEATHER_CHESTPLATE
     color: YELLOW
     slot: 32
+    hide_attributes: true
     display_name: "&6Свечение"
     lore:
       - "&7Нажмите чтобы открыть"
@@ -84,9 +97,7 @@ Items:
 
   gray:
     material: GRAY_STAINED_GLASS_PANE
-    slot:
-      - 4
-      - 49
+    slot: 4
     display_name: " "
 
 

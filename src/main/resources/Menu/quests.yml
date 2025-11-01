@@ -16,13 +16,15 @@ Items:
       - '28-34'
       - '37-43'
     material: BOOK
-    type: category-example
+    type: all_quests
     display_name: "&e&lКвест &7%quest_name%"
     lore:
+      - "&7Тип: &f%quest_progress_type%"
       - "&7Статус: &f%status%"
       - "&7Задача: &f%quest_description%"
       - "&7Прогресс: &a%quest_progress%/%quest_target%"
       - ""
+      - "&6Награды:"
 
 
   orange:

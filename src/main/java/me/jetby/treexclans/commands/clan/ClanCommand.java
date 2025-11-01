@@ -83,12 +83,17 @@ public class ClanCommand implements CommandExecutor, TabCompleter {
                     .collect(Collectors.toList());
 
             for (Map.Entry<String, List<String>> entry : menuArgs.entrySet()) {
-                if (entry.getValue().contains(args[0])) {
-                    Menu menu = plugin.getGuiLoader().getMenus().get(entry.getKey());
+                Menu menu = plugin.getGuiLoader().getMenus().get(entry.getKey());
+
+                if (isBuiltInGuiType(menu.type())) {
                     if (GuiType.valueOf(menu.type()) == GuiType.DEFAULT) {
                         if (player.hasPermission(menu.permission())) {
                             completions.addAll(entry.getValue());
                         }
+                    }
+                } else {
+                    if (player.hasPermission(menu.permission())) {
+                        completions.addAll(entry.getValue());
                     }
                 }
             }
@@ -119,15 +124,16 @@ public class ClanCommand implements CommandExecutor, TabCompleter {
             });
             completions.remove("create");
             completions.remove("accept");
+
             for (Map.Entry<String, List<String>> entry : menuArgs.entrySet()) {
                 Menu menu = plugin.getGuiLoader().getMenus().get(entry.getKey());
-                if (GuiType.valueOf(menu.type()) != GuiType.DEFAULT && player.hasPermission(menu.permission())) {
+
+                if (!isBuiltInGuiType(menu.type()) && player.hasPermission(menu.permission())) {
                     completions.addAll(entry.getValue().stream()
                             .filter(str -> str.toLowerCase().startsWith(args[0].toLowerCase()))
                             .toList());
                 }
             }
-
 
             return completions.stream()
                     .filter(cmd -> cmd.startsWith(args[0].toLowerCase()))
@@ -142,5 +148,12 @@ public class ClanCommand implements CommandExecutor, TabCompleter {
         }
     }
 
-
+    private boolean isBuiltInGuiType(String type) {
+        try {
+            GuiType.valueOf(type);
+            return true;
+        } catch (IllegalArgumentException e) {
+            return false;
+        }
+    }
 }
