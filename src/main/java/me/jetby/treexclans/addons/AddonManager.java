@@ -2,13 +2,12 @@ package me.jetby.treexclans.addons;
 
 import lombok.Getter;
 import me.jetby.treexclans.TreexClans;
+import org.bukkit.configuration.file.YamlConfiguration;
 
 import java.io.File;
 import java.net.URL;
 import java.net.URLClassLoader;
 import java.util.*;
-import java.util.jar.JarFile;
-import java.util.jar.Manifest;
 
 import static me.jetby.treexclans.TreexClans.LOGGER;
 
@@ -16,22 +15,16 @@ public class AddonManager {
 
     private final TreexClans plugin;
     private final File addonsFolder;
-    private final File addonDataFolder;
     @Getter
     private final Map<String, TreexAddon> loadedAddons = new HashMap<>();
 
     public AddonManager(TreexClans plugin) {
         this.plugin = plugin;
         this.addonsFolder = new File(plugin.getDataFolder(), "addons");
-        this.addonDataFolder = new File(plugin.getDataFolder(), "addon-data");
 
         if (!addonsFolder.exists()) {
             addonsFolder.mkdirs();
             LOGGER.success("Addons folder created at: " + addonsFolder.getAbsolutePath());
-        }
-
-        if (!addonDataFolder.exists()) {
-            addonDataFolder.mkdirs();
         }
     }
 
@@ -65,19 +58,37 @@ public class AddonManager {
         LOGGER.success(loadedAddons.size() + " addon(s) loaded successfully!");
         LOGGER.success("------------------------");
     }
+
     private void loadAddon(File jarFile) throws Exception {
+        String jarName = jarFile.getName();
+        String addonName = extractAddonName(jarName);
+
+        File configFolder = new File(addonsFolder, addonName);
+
+        if (!configFolder.exists()) {
+            configFolder.mkdirs();
+        }
+
+        File addonYamlFile = new File(configFolder, "addon.yml");
+
+        if (!addonYamlFile.exists()) {
+            LOGGER.warn("addon.yml not found in: " + addonName);
+            return;
+        }
+
+        YamlConfiguration addonYaml = YamlConfiguration.loadConfiguration(addonYamlFile);
+
+        String mainClassName = addonYaml.getString("main");
+
+        if (mainClassName == null || mainClassName.isEmpty()) {
+            LOGGER.warn("No main class specified in " + addonName + "/addon.yml");
+            return;
+        }
+
         URLClassLoader classLoader = new URLClassLoader(
                 new URL[]{jarFile.toURI().toURL()},
                 Thread.currentThread().getContextClassLoader()
         );
-
-        String mainClassName = getMainClassName(jarFile);
-
-        if (mainClassName == null || mainClassName.isEmpty()) {
-            LOGGER.warn("No main class found in addon: " + jarFile.getName());
-            classLoader.close();
-            return;
-        }
 
         try {
             Class<?> mainClass = classLoader.loadClass(mainClassName);
@@ -90,18 +101,11 @@ public class AddonManager {
 
             TreexAddon addon = (TreexAddon) mainClass.getDeclaredConstructor().newInstance();
 
-            String addonName = jarFile.getName().replace(".jar", "");
-            File addonData = new File(addonDataFolder, addonName);
-
-            if (!addonData.exists()) {
-                addonData.mkdirs();
-            }
-
-            addon.initialize(plugin, addonData);
+            addon.initialize(plugin, configFolder);
             addon.onEnable();
 
             loadedAddons.put(addon.getName(), addon);
-            LOGGER.success("Addon loaded: " + addon.getName() + " v" + addon.getVersion());
+            LOGGER.success("Addon loaded: " + addon.getName() + " v" + addon.getVersion() + " by " + addon.getAuthor());
 
         } catch (ClassNotFoundException e) {
             LOGGER.error("Main class not found: " + mainClassName);
@@ -109,19 +113,22 @@ public class AddonManager {
         }
     }
 
+    private String extractAddonName(String jarName) {
+        String name = jarName.replace(".jar", "");
 
-    private String getMainClassName(File jarFile) throws Exception {
-        JarFile jar = new JarFile(jarFile);
-        Manifest manifest = jar.getManifest();
-        jar.close();
-
-        if (manifest == null) {
-            return null;
+        int versionIndex = -1;
+        for (int i = 0; i < name.length(); i++) {
+            if (name.charAt(i) == '-' && i + 1 < name.length() && Character.isDigit(name.charAt(i + 1))) {
+                versionIndex = i;
+                break;
+            }
+        }
+        if (versionIndex != -1) {
+            return name.substring(0, versionIndex);
         }
 
-        return manifest.getMainAttributes().getValue("Main-Class");
+        return name;
     }
-
 
     public void unloadAllAddons() {
         for (TreexAddon addon : loadedAddons.values()) {
@@ -136,22 +143,13 @@ public class AddonManager {
         loadedAddons.clear();
     }
 
-
     public TreexAddon getAddon(String name) {
         return loadedAddons.get(name);
     }
-
-
     public boolean isAddonLoaded(String name) {
         return loadedAddons.containsKey(name);
     }
-
     public List<TreexAddon> getLoadedAddons() {
         return new ArrayList<>(loadedAddons.values());
-    }
-
-
-    public File getAddonDataFolder(String addonName) {
-        return new File(addonDataFolder, addonName);
     }
 }
