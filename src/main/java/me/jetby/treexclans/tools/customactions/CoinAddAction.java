@@ -11,7 +11,6 @@ import org.jetbrains.annotations.NotNull;
 import static me.jetby.treexclans.TreexClans.LOGGER;
 
 public class CoinAddAction implements Action {
-    private final TreexClans plugin = TreexClans.getInstance();
     @Override
     public void execute(@NotNull ActionContext ctx) {
         Player player = ctx.getPlayer();

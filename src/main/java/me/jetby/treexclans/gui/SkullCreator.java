@@ -4,6 +4,7 @@ import com.mojang.authlib.GameProfile;
 import com.mojang.authlib.properties.Property;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
+import org.bukkit.OfflinePlayer;
 import org.bukkit.block.Block;
 import org.bukkit.block.Skull;
 import org.bukkit.inventory.ItemStack;
@@ -51,6 +52,10 @@ public class SkullCreator {
      */
     public static ItemStack itemFromName(String name) {
         return itemWithName(createSkull(), name);
+    }
+    public static ItemStack itemFromUuid(UUID uuid) {
+        OfflinePlayer offlinePlayer = Bukkit.getOfflinePlayer(uuid);
+        return itemWithName(createSkull(), offlinePlayer.getName());
     }
 
 

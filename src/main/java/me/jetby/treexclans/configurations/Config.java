@@ -125,8 +125,8 @@ public class Config {
             }
 
 
-            defaultRank = defaultRanks.get(clanCreate.getString("member-rank", "MEMBER"));
-            leaderRank = defaultRanks.get(clanCreate.getString("leader-rank", "LEADER"));
+            defaultRank = defaultRanks.get(clanCreate.getString("member-rank", "member").toLowerCase());
+            leaderRank = defaultRanks.get(clanCreate.getString("leader-rank", "leader").toLowerCase());
             minTagLength = clanCreate.getInt("min-clan-tag-length", 3);
             maxTagLength = clanCreate.getInt("max-clan-tag-length", 6);
             blockedTags = clanCreate.getStringList("blocked-tags");

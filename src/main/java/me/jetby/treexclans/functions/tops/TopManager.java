@@ -34,7 +34,7 @@ public class TopManager {
                 .sorted(Map.Entry.comparingByValue((c1, c2) -> {
                     double kd1 = calculateKd(getTotalKills(c1), getTotalDeaths(c1));
                     double kd2 = calculateKd(getTotalKills(c2), getTotalDeaths(c2));
-                    return Double.compare(kd1, kd2);
+                    return Double.compare(kd2, kd1);
                 }))
                 .limit(key)
                 .toList();

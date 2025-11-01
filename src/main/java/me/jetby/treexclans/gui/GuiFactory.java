@@ -21,21 +21,64 @@ public class GuiFactory {
                       Menu menu,
                       Player player,
                       Clan clan,
-                      @Nullable Rank rank,
-                      @Nullable Member target,
-                      @Nullable TopType topType) {
-        return switch (GuiType.valueOf(menu.type())) {
-            case MEMBERS -> new MembersGui(plugin, menu, player, clan);
-            case CHOOSE_COLOR -> new ChooseColorGui(plugin, menu, player, clan, target);
-            case CHEST -> new ChestGui(plugin, menu, player, clan);
-            case QUESTS -> new QuestsGui(plugin, menu, player, clan);
-            case RANKS -> new RanksGui(plugin, menu, player, clan);
-            case RANK_PERMISSIONS -> new RankPermissionsGui(plugin, menu, player, clan, rank);
-            case CHOOSE_PLAYER_COLOR -> new ChoosePlayerColorGui(plugin, menu, player, clan, target);
-            case MENU -> new DefaultGui(plugin, menu, player, clan);
-            case TOP_CLANS -> new TopClansGui(plugin, menu, player, clan, topType);
-            default -> getCustomGuiOrDefault(plugin, menu, player, clan, menu.type());
-        };
+                      Object... customObjects) {
+        switch (GuiType.valueOf(menu.type())) {
+            case MEMBERS -> {
+                return new MembersGui(plugin, menu, player, clan);
+            }
+            case CHOOSE_COLOR -> {
+                if (customObjects!=null) {
+                    for (Object obj : customObjects) {
+                        if (obj instanceof Member target) return new ChooseColorGui(plugin, menu, player, clan, target);
+                    }
+                }
+            }
+            case CHEST -> {
+                return new ChestGui(plugin, menu, player, clan);
+            }
+            case QUESTS -> {
+                return new QuestsGui(plugin, menu, player, clan);
+            }
+            case RANKS -> {
+                return new RanksGui(plugin, menu, player, clan);
+            }
+            case RANK_PERMISSIONS -> {
+                if (customObjects!=null) {
+                    for (Object obj : customObjects) {
+                        if (obj instanceof Rank rank) return new RankPermissionsGui(plugin, menu, player, clan, rank);
+                    }
+                }
+            }
+            case CHOOSE_PLAYER_COLOR -> {
+                if (customObjects!=null) {
+                    for (Object obj : customObjects) {
+                        if (obj instanceof Member target) return new ChoosePlayerColorGui(plugin, menu, player, clan, target);
+                    }
+                }
+            }
+            case MENU -> {
+                return new DefaultGui(plugin, menu, player, clan);
+            }
+            case TOP_CLANS -> {
+                if (customObjects!=null) {
+                    TopType topType = null;
+                    int num = 1;
+                    for (Object obj : customObjects) {
+                        if (obj instanceof TopType t) {
+                            topType = t;
+                        }
+                        if (obj instanceof Integer i)  {
+                            num = i;
+                        }
+                    }
+                    return new TopClansGui(plugin, menu, player, clan, topType, num);
+                }
+            }
+            default -> {
+                return getCustomGuiOrDefault(plugin, menu, player, clan, menu.type());
+            }
+        }
+        return null;
     }
 
     private Gui getCustomGuiOrDefault(TreexClans plugin, Menu menu, Player player, Clan clan, String type) {

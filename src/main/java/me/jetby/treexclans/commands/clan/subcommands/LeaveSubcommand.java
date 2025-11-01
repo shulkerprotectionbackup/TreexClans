@@ -27,11 +27,11 @@ public class LeaveSubcommand implements Subcommand {
                 return true;
             }
 
+            clan.removeMember(clan.getMember(player.getUniqueId()));
             plugin.getLang().sendMessage(player, clan, "clan-leave",
                     new Lang.ReplaceString("{player}", player.getName()),
                     new Lang.ReplaceString("{clan}", clan.getId())
             );
-            clan.removeMember(clan.getMember(player.getUniqueId()));
         }
         return true;
     }

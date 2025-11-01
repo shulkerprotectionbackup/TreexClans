@@ -136,7 +136,7 @@ public class ChoosePlayerColorGui extends Gui {
                                 GuiFactory.create(
                                                 getPlugin(),
                                                 getPlugin().getGuiLoader().getMenus().get(memberButton.openGui()),
-                                                getPlayer(), getClan(), null, member, null)
+                                                getPlayer(), getClan(), member)
                                         .open(getPlayer()), 1L);
                     });
                 };

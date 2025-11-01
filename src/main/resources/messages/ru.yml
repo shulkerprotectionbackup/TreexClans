@@ -1,4 +1,3 @@
-
 lang: ru
 
 prefix: "<#FFE259>&lTreexClans</#FFA751> &7>"
@@ -151,3 +150,24 @@ quest-status-gradual: "&eВыполните предыдущий"
 
 rank-perm-yes: "&a✔"
 rank-perm-no: "&c✘"
+
+gui:
+  tops:
+    kills:
+      set: "&4&lУбийствам"
+      unset: "Убийствам"
+    deaths:
+      set: "&4&lСмертям"
+      unset: "Смертям"
+    level:
+      set: "&4&lУровню"
+      unset: "Уровню"
+    balance:
+      set: "&4&lБалансу"
+      unset: "Балансу"
+    members:
+      set: "&4&lУчастникам"
+      unset: "Участникам"
+    kd:
+      set: "&4&lУ/С"
+      unset: "У/С"

@@ -180,7 +180,7 @@ public class RanksGui extends Gui {
                                 GuiFactory.create(
                                                 getPlugin(),
                                                 getPlugin().getGuiLoader().getMenus().get(templateButton.openGui()),
-                                                getPlayer(), getClan(), rank, null, null)
+                                                getPlayer(), getClan(), rank)
                                         .open(getPlayer()), 1L);
                     });
                 };

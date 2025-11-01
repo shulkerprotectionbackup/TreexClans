@@ -17,12 +17,14 @@ import org.bukkit.event.inventory.InventoryType;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.inventory.meta.LeatherArmorMeta;
+import org.bukkit.persistence.PersistentDataType;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import java.io.File;
 import java.util.*;
 
 import static me.jetby.treexclans.TreexClans.LOGGER;
+import static me.jetby.treexclans.TreexClans.NAMESPACED_KEY;
 
 @RequiredArgsConstructor
 public class GuiLoader {

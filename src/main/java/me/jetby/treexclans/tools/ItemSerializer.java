@@ -1,14 +1,16 @@
 package me.jetby.treexclans.tools;
 
+import lombok.experimental.UtilityClass;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.util.io.BukkitObjectInputStream;
 import org.bukkit.util.io.BukkitObjectOutputStream;
 import java.io.*;
 import java.util.Base64;
 
+@UtilityClass
 public class ItemSerializer {
 
-    public static String itemToBase64(ItemStack item) {
+    public String itemToBase64(ItemStack item) {
         try (ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
              BukkitObjectOutputStream dataOutput = new BukkitObjectOutputStream(outputStream)) {
 
@@ -20,7 +22,7 @@ public class ItemSerializer {
         }
     }
 
-    public static ItemStack itemFromBase64(String base64) {
+    public ItemStack itemFromBase64(String base64) {
         try (ByteArrayInputStream inputStream = new ByteArrayInputStream(Base64.getDecoder().decode(base64));
              BukkitObjectInputStream dataInput = new BukkitObjectInputStream(inputStream)) {
 
