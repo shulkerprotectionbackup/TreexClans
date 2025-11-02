@@ -21,7 +21,8 @@ import java.util.UUID;
 
 public class SkullCreator {
 
-    private SkullCreator() {}
+    private SkullCreator() {
+    }
 
     private static boolean warningPosted = false;
     private static boolean mutateWithNew = false;
@@ -31,6 +32,7 @@ public class SkullCreator {
 
     /**
      * Creates a player skull, should work in both legacy and new Bukkit APIs.
+     *
      * @return Skull ItemStack
      */
     public static ItemStack createSkull() {
@@ -53,6 +55,7 @@ public class SkullCreator {
     public static ItemStack itemFromName(String name) {
         return itemWithName(createSkull(), name);
     }
+
     public static ItemStack itemFromUuid(UUID uuid) {
         OfflinePlayer offlinePlayer = Bukkit.getOfflinePlayer(uuid);
         return itemWithName(createSkull(), offlinePlayer.getName());
@@ -89,17 +92,18 @@ public class SkullCreator {
      */
     @Deprecated
     public static ItemStack itemWithName(ItemStack item, String name) {
-        notNull(item, "item");
-        notNull(name, "name");
 
-        SkullMeta meta = (SkullMeta) item.getItemMeta();
-        if (meta != null) {
-            meta.setOwner(name);
+        if (notNull(item, "item") && notNull(name, "name")) {
+            SkullMeta meta = (SkullMeta) item.getItemMeta();
+            if (meta != null) {
+                meta.setOwner(name);
+            }
+            item.setItemMeta(meta);
         }
-        item.setItemMeta(meta);
 
         return item;
     }
+
     /**
      * Modifies a skull to use the skin at the given Mojang URL.
      *
@@ -155,10 +159,8 @@ public class SkullCreator {
         state.update(false, false);
     }
 
-    private static void notNull(Object o, String name) {
-        if (o == null) {
-            throw new NullPointerException(name + " should not be null!");
-        }
+    private static boolean notNull(Object o, String name) {
+        return o != null;
     }
 
     private static String urlToBase64(String url) {
@@ -233,6 +235,7 @@ public class SkullCreator {
                 Bukkit.getLogger().warning("SKULLCREATOR API - Using the legacy bukkit API with 1.13+ bukkit versions is not supported!");
                 warningPosted = true;
             }
-        } catch (NoSuchFieldException | IllegalArgumentException ignored) {}
+        } catch (NoSuchFieldException | IllegalArgumentException ignored) {
+        }
     }
 }
