@@ -59,6 +59,11 @@ public class Config {
     }
 
     public void load() {
+        requirements.clear();
+        blockedTags = null;
+        defaultRanks.clear();
+        levels.clear();
+
 
         formattedTimeFormat = configuration.getString("placeholder-show-format", "%weeks% %days% %hours% %minutes% %seconds%");
 

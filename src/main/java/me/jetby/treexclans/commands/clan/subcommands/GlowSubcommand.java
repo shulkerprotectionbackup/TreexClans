@@ -32,7 +32,7 @@ public class GlowSubcommand implements Subcommand {
             Clan clan = plugin.getClanManager().getClanByMember(player.getUniqueId());
             if (plugin.getGlow().hasObserver(player)) {
                 plugin.getGlow().removeObserver(player);
-                sender.sendMessage("§cClan glow disabled.");
+                plugin.getLang().sendMessage(player, clan, "clan-glow-off");
             } else {
                 Set<Member> members = new HashSet<>(clan.getMembers());
                 if (clan.getMember(player.getUniqueId())!=clan.getLeader()) {
@@ -40,7 +40,7 @@ public class GlowSubcommand implements Subcommand {
                 }
                 members.remove(clan.getMember(player.getUniqueId()));
                 plugin.getGlow().addObserver(player, members);
-                sender.sendMessage("§aClan glow enabled.");
+                plugin.getLang().sendMessage(player, clan, "clan-glow-on");
             }
         }
         return true;

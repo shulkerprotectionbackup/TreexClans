@@ -55,6 +55,7 @@ public final class TreexClans extends JavaPlugin {
     }
 
     private Economy economy;
+    @Setter
     private Config cfg;
     @Setter
     public Lang lang;
@@ -67,9 +68,10 @@ public final class TreexClans extends JavaPlugin {
 
     public static Logger LOGGER;
     public static final NamespacedKey NAMESPACED_KEY = new NamespacedKey("treexclans", "item");
-
+    @Setter
     private GuiLoader guiLoader;
 
+    @Setter
     private QuestsLoader questsLoader;
     private QuestManager questManager;
     private ClanPlaceholder clanPlaceholder;
@@ -123,7 +125,7 @@ public final class TreexClans extends JavaPlugin {
             xClanCommand.setExecutor(cmd);
             xClanCommand.setTabCompleter(cmd);
         }
-        PluginCommand clanCommand = this.getCommand("clan");
+        clanCommand = this.getCommand("clan");
         if (clanCommand != null) {
             ClanCommand cmd = new ClanCommand(this);
             clanCommand.setExecutor(cmd);
@@ -149,6 +151,8 @@ public final class TreexClans extends JavaPlugin {
         addonManager = new AddonManager(this);
         addonManager.loadAddons();
     }
+
+    private PluginCommand clanCommand;
 
     @Override
     public void onDisable() {

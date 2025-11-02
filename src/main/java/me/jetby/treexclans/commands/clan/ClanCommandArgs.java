@@ -20,8 +20,7 @@ public enum ClanCommandArgs {
     BASE(new BaseSubcommand()),
     LEAVE(new LeaveSubcommand()),
     CHAT(new ChatSubcommand()),
-    PVP(new PvpSubcommand()),
-    INFO(new InfoSubcommand());
+    PVP(new PvpSubcommand());
 
     @Getter
     private Subcommand subcommand;

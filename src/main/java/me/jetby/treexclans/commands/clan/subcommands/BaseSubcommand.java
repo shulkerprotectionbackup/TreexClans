@@ -25,7 +25,7 @@ public class BaseSubcommand implements Subcommand {
             }
             Clan clan = plugin.getClanManager().getClanByMember(player.getUniqueId());
             if (clan.getBase()==null) {
-                player.sendMessage("§cClan base not set");
+                plugin.getLang().sendMessage(player, null, "clan-base-unset");
                 return true;
             }
             if (!clan.getMember(player.getUniqueId()).getRank().perms().contains(RankPerms.BASE)) {
@@ -33,6 +33,7 @@ public class BaseSubcommand implements Subcommand {
                 return true;
             }
             player.teleport(clan.getBase());
+            plugin.getLang().sendMessage(player, clan, "clan-base");
         }
 
         return true;

@@ -3,10 +3,10 @@ package me.jetby.treexclans.commands.admin;
 import lombok.Getter;
 import me.jetby.treexclans.TreexClans;
 import me.jetby.treexclans.commands.Subcommand;
-import me.jetby.treexclans.commands.admin.subcommands.TestSubcommand;
+import me.jetby.treexclans.commands.admin.subcommands.ReloadSubcommand;
 
 public enum AdminCommandArgs {
-    TEST(new TestSubcommand(TreexClans.getInstance()));
+    RELOAD(new ReloadSubcommand(TreexClans.getInstance()));
 
     @Getter
     private Subcommand subcommand;

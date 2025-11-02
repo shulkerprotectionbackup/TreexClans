@@ -30,7 +30,7 @@ public class SetBaseSubcommand implements Subcommand {
                 return true;
             }
             clan.setBase(player.getLocation());
-            player.sendMessage("You has successfully set the base location");
+            plugin.getLang().sendMessage(player, clan, "clan-setbase");
         }
 
         return true;

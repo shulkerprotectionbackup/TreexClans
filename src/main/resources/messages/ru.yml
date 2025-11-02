@@ -142,6 +142,16 @@ clan-disband-confirm:
 clan-leave:
   - "[message] {prefix} &eВы покинули клан {clan}"
   - "[team_msg] {prefix} &cИгрок {player} покинул клан"
+clan-setbase:
+  - '[message] {prefix} &aЛокация успешно установлена'
+clan-base:
+  - '[actionbar] &7Телепорт на базу'
+clan-base-unset:
+  - '[message] &cКлан база не установлена'
+clan-glow-on:
+  - '[message] {prefix} &fСвечение соклановцев &#17FF35включён'
+clan-glow-off:
+  - '[message] {prefix} &fСвечение соклановцев &#FB0000выключен'
 
 quest-status-progress: "&eВ прогрессе"
 quest-status-uncompleted: "&cНе выполнен"

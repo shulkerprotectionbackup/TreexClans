@@ -22,6 +22,8 @@ public class QuestsLoader {
     @Getter private final Map<String, Quest> quests = new HashMap<>();
 
     public void load() {
+        quests.clear();
+        categories.clear();
 
         for (String key : configuration.getKeys(false)) {
             if (key.equals("category")) continue;
