@@ -11,6 +11,9 @@ clan-create:
   requirements:
     money-check:
       type: math
+      # Если у вас не отображает сумму вместо %vault_eco_balance_fixed% тогда выполните следующее
+      # /papi ecloud download vault
+      # /papi reload
       input: "%vault_eco_balance_fixed% >= 5000"
       actions:
         - "[money_take] 5000"
