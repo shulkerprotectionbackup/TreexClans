@@ -19,6 +19,7 @@ import me.jetby.treexclans.functions.glow.Glow;
 import me.jetby.treexclans.functions.quests.QuestManager;
 import me.jetby.treexclans.functions.tops.TopManager;
 import me.jetby.treexclans.gui.CommandRegistrar;
+import me.jetby.treexclans.gui.Gui;
 import me.jetby.treexclans.gui.GuiLoader;
 import me.jetby.treexclans.hooks.ClanPlaceholder;
 import me.jetby.treexclans.hooks.TreexAutoDownload;
@@ -28,17 +29,21 @@ import me.jetby.treexclans.listeners.QuestsListeners;
 import me.jetby.treexclans.storage.Storage;
 import me.jetby.treexclans.storage.YAML;
 import me.jetby.treexclans.tools.FormatTime;
+import me.jetby.treexclans.tools.bStats;
 import me.jetby.treexclans.tools.customactions.Actions;
 import net.milkbowl.vault.economy.Economy;
 import org.bukkit.Bukkit;
 import org.bukkit.NamespacedKey;
+import org.bukkit.OfflinePlayer;
 import org.bukkit.command.PluginCommand;
 import org.bukkit.entity.Player;
+import org.bukkit.event.inventory.InventoryCloseEvent;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import java.io.IOException;
 import java.util.HashSet;
 import java.util.Set;
+import java.util.UUID;
 
 @Getter
 public final class TreexClans extends JavaPlugin {
@@ -136,6 +141,8 @@ public final class TreexClans extends JavaPlugin {
 
         topManager = new TopManager(this);
 
+        new bStats(this, 27749);
+
         getServer().getPluginManager().registerEvents(new ClanListeners(this), this);
         getServer().getPluginManager().registerEvents(new QuestsListeners(this), this);
 
@@ -155,8 +162,9 @@ public final class TreexClans extends JavaPlugin {
                 clanPlaceholder.unregister();
             }
         }
-        // TODO: закрытие гуи для игроков у которых открыто
-
+        for (Player player : Bukkit.getOnlinePlayers()) {
+            player.closeInventory(InventoryCloseEvent.Reason.PLAYER);
+        }
     }
 
     private void disableGlowForAll() {
