@@ -20,9 +20,9 @@ import me.jetby.treexclans.functions.quests.QuestManager;
 import me.jetby.treexclans.functions.tops.TopManager;
 import me.jetby.treexclans.gui.CommandRegistrar;
 import me.jetby.treexclans.gui.GuiLoader;
-import me.jetby.treexclans.hooks.TreexClansPlaceholders;
-import me.jetby.treexclans.hooks.TreexInitializer;
-import me.jetby.treexclans.hooks.VaultInitializer;
+import me.jetby.treexclans.hooks.ClanPlaceholder;
+import me.jetby.treexclans.hooks.TreexAutoDownload;
+import me.jetby.treexclans.hooks.Vault;
 import me.jetby.treexclans.listeners.ClanListeners;
 import me.jetby.treexclans.listeners.QuestsListeners;
 import me.jetby.treexclans.storage.Storage;
@@ -67,7 +67,7 @@ public final class TreexClans extends JavaPlugin {
 
     private QuestsLoader questsLoader;
     private QuestManager questManager;
-    private TreexClansPlaceholders treexClansPlaceholders;
+    private ClanPlaceholder clanPlaceholder;
 
     private AddonManager addonManager;
 
@@ -82,7 +82,7 @@ public final class TreexClans extends JavaPlugin {
         INSTANCE = this;
 
         try {
-            new TreexInitializer(this);
+            new TreexAutoDownload(this);
             new Actions().registerCustomActions();
         } catch (IOException ex) {
             getLogger().warning("Failed to initialize Treex: " + ex.getMessage());
@@ -91,12 +91,12 @@ public final class TreexClans extends JavaPlugin {
         }
         LOGGER = LogInitialize.getLogger(this);
 
-        treexClansPlaceholders = new TreexClansPlaceholders(this);
-        if (treexClansPlaceholders.isPapi()) {
-            treexClansPlaceholders.register();
+        clanPlaceholder = new ClanPlaceholder(this);
+        if (clanPlaceholder.isPapi()) {
+            clanPlaceholder.register();
         }
 
-        economy = new VaultInitializer().getEconomy();
+        economy = new Vault().getEconomy();
 
         cfg = new Config(this);
         cfg.load();
@@ -150,9 +150,9 @@ public final class TreexClans extends JavaPlugin {
         }
         if (storage != null) storage.save();
         disableGlowForAll();
-        if (treexClansPlaceholders!=null) {
-            if (treexClansPlaceholders.isPapi()) {
-                treexClansPlaceholders.unregister();
+        if (clanPlaceholder !=null) {
+            if (clanPlaceholder.isPapi()) {
+                clanPlaceholder.unregister();
             }
         }
         // TODO: закрытие гуи для игроков у которых открыто

@@ -14,7 +14,7 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 
 
-public class TreexInitializer implements Listener {
+public class TreexAutoDownload implements Listener {
 
     private final JavaPlugin plugin;
 
@@ -23,7 +23,7 @@ public class TreexInitializer implements Listener {
         Bukkit.getPluginManager().disablePlugin(plugin);
     }
 
-    public TreexInitializer(JavaPlugin plugin) throws IOException {
+    public TreexAutoDownload(JavaPlugin plugin) throws IOException {
         this.plugin = plugin;
 
         if (Bukkit.getPluginManager().getPlugin("Treex") == null || !Bukkit.getPluginManager().getPlugin("Treex").isEnabled()) {

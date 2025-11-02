@@ -7,11 +7,11 @@ import org.bukkit.plugin.RegisteredServiceProvider;
 
 import static me.jetby.treexclans.TreexClans.LOGGER;
 
-public class VaultInitializer {
+public class Vault {
     @Getter
     private final Economy economy;
 
-    public VaultInitializer() {
+    public Vault() {
         if (Bukkit.getServer().getPluginManager().getPlugin("Vault") == null) {
             LOGGER.error("Vault was not found!");
             this.economy = null;

@@ -136,7 +136,7 @@ public class ClanCommand implements CommandExecutor, TabCompleter {
             for (Map.Entry<String, List<String>> entry : menuArgs.entrySet()) {
                 Menu menu = plugin.getGuiLoader().getMenus().get(entry.getKey());
 
-                if (!isBuiltInGuiType(menu.type()) && player.hasPermission(menu.permission())) {
+                if (isBuiltInGuiType(menu.type()) && player.hasPermission(menu.permission())) {
                     completions.addAll(entry.getValue().stream()
                             .filter(str -> str.toLowerCase().startsWith(args[0].toLowerCase()))
                             .toList());

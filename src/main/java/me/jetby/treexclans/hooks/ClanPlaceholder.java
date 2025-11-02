@@ -9,12 +9,12 @@ import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-public class TreexClansPlaceholders extends PlaceholderExpansion {
+public class ClanPlaceholder extends PlaceholderExpansion {
     private final TreexClans plugin;
     @Getter
     private final boolean papi;
 
-    public TreexClansPlaceholders(TreexClans plugin) {
+    public ClanPlaceholder(TreexClans plugin) {
         this.plugin = plugin;
         this.papi = Bukkit.getPluginManager().getPlugin("PlaceholderAPI") != null && Bukkit.getPluginManager().getPlugin("PlaceholderAPI").isEnabled();
     }

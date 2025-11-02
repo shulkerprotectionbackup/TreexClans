@@ -13,9 +13,12 @@ public class CustomCommandApi {
     @Getter
     private final Map<String, Subcommand> subcommands = new HashMap<>();
 
-    public void registerSubcommand(String name, Subcommand subcommand, CommandType commandType) {
+    public void register(String name, Subcommand subcommand) {
         String lowerName = name.toLowerCase();
         subcommands.put(lowerName, subcommand);
+    }
+    public void unregister(String name) {
+        subcommands.remove(name);
     }
 
     public enum CommandType {
