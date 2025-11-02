@@ -167,7 +167,7 @@ public final class TreexClans extends JavaPlugin {
             }
         }
         for (Player player : Bukkit.getOnlinePlayers()) {
-            player.closeInventory(InventoryCloseEvent.Reason.PLAYER);
+            player.getOpenInventory().close();
         }
     }
 

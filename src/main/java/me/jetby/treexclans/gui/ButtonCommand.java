@@ -10,6 +10,5 @@ public record ButtonCommand(
         ClickType clickType,
         List<String> actions,
         List<ClickRequirement> clickRequirements
-
 ) {
 }

@@ -6,8 +6,6 @@ open_permission: none
 
 listen: choose_player_color
 
-# Available types
-# members
 Items:
 
   everyone:

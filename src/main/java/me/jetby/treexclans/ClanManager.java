@@ -21,6 +21,7 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerQuitEvent;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.*;
 
@@ -78,7 +79,7 @@ public record ClanManager(TreexClans plugin) implements Listener {
     public boolean createClan(@NotNull String clanName, @NotNull Clan clan) {
         if (!clanExists(clanName)) {
             plugin.getCfg().getClans().put(clanName, clan);
-            Bukkit.getPluginManager().callEvent(new OnClanCreate(clan));
+            Bukkit.getPluginManager().callEvent(new OnClanCreate(clan, null));
             return true;
         }
         return false;
@@ -88,15 +89,25 @@ public record ClanManager(TreexClans plugin) implements Listener {
      * Creates a new clan with the specified leader and default configuration.
      *
      * @param clanName the name of the new clan
-     * @param leader   the leader of the clan
+     * @param player   the leader of the clan
      * @return true if the clan was successfully created, false if it already exists
      */
-    public boolean createClan(@NotNull String clanName, @NotNull Member leader) {
+    public boolean createClan(@NotNull String clanName, @NotNull Player player) {
         if (!clanExists(clanName)) {
+            Member leader = new Member(
+                    player.getUniqueId(),
+                    plugin.getCfg().getLeaderRank(),
+                    System.currentTimeMillis(),
+                    System.currentTimeMillis() ,
+                    false, false,
+                    0, 0, new HashMap<>(),
+                    0,0
+
+            );
             Clan clan = new Clan(clanName, null, leader, new HashSet<>(), plugin.getCfg().getDefaultRanks(),
                     plugin.getCfg().getLevels().getOrDefault(1, new Level("1", 0, 1,0,1, new ArrayList<>(), new ArrayList<>())), 0.0, null, 0, false, new HashMap<>(), new HashMap<>(), new ArrayList<>());
             plugin.getCfg().getClans().put(clanName, clan);
-            Bukkit.getPluginManager().callEvent(new OnClanCreate(clan));
+            Bukkit.getPluginManager().callEvent(new OnClanCreate(clan, player));
             return true;
         }
         return false;
@@ -139,7 +150,7 @@ public record ClanManager(TreexClans plugin) implements Listener {
         return true;
     }
 
-    public void deleteClan(@NotNull Clan clan) {
+    public void deleteClan(@NotNull Clan clan, @Nullable Player player) {
 //        for (Member member : clan.getMembers()) {
 //            Player player = Bukkit.getPlayer(member.getUuid());
 //            if (player != null) {
@@ -147,7 +158,7 @@ public record ClanManager(TreexClans plugin) implements Listener {
 //            }
 //        }
         plugin.getCfg().getClans().remove(clan.getId());
-        Bukkit.getPluginManager().callEvent(new OnClanDelete(clan));
+        Bukkit.getPluginManager().callEvent(new OnClanDelete(clan, player));
     }
 
     public boolean deleteClan(@NotNull String clanName) {
@@ -162,7 +173,7 @@ public record ClanManager(TreexClans plugin) implements Listener {
             }
         }
         plugin.getCfg().getClans().remove(clan.getId());
-        Bukkit.getPluginManager().callEvent(new OnClanDelete(clan));
+        Bukkit.getPluginManager().callEvent(new OnClanDelete(clan, null));
         return true;
     }
 

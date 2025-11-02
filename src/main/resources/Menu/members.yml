@@ -12,9 +12,8 @@ listen: members
 Items:
 
   leader:
-    material: basehead-%player_name%
     type: leader
-    display_name: "%rank% &f&l%player_name%"
+    display_name: "%rank% &f&l%target_name%"
     slot: 13
     lore:
       - "&6&m                    "
@@ -29,13 +28,12 @@ Items:
       - "&6&m                    "
 
   members:
-    material: basehead-%player_name%
     type: members
     slot:
       - '19-25'
       - '28-34'
       - '37-43'
-    display_name: "%rank% &f%player_name%"
+    display_name: "%rank% &f%target_name%"
     lore:
       - "&6&m                    "
       - "&6⌚ &fБыл в сети: &a%last-online%"
@@ -47,9 +45,6 @@ Items:
       - "&6⚔ &fУбийств: &6&l%kills%"
       - "&6☠ &fСмертей: &6&l%deaths%"
       - "&6🛡 &fК/Д: &6&l%kd%"
-      - "&6🏹 &fПобед в клановых войнах: &6&l%war_wins%"
-      - "&6🏹 &fУчастий в клановых войнах: &6&l%war_participated%"
-      - "&6🏹 &fПоражений в клановых войнах: &6&l%war_loses%"
       - "&6&m                    "
 
 

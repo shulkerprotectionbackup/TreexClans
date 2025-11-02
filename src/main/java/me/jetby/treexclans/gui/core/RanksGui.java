@@ -54,19 +54,10 @@ public class RanksGui extends Gui {
                 }
 
                 ItemWrapper wrapper = new ItemWrapper(button.itemStack());
-
-                String rawDisplayName = button.displayName();
-                String processedDisplayName = replaceMemberPlaceholders(rawDisplayName, rank);
-                processedDisplayName = Papi.setPapi(player, processedDisplayName);
-                wrapper.displayName(Colorize.text(processedDisplayName));
-
-                List<String> rawLore = button.lore();
-                List<String> processedLore = rawLore.stream()
-                        .map(l -> replaceMemberPlaceholders(l, rank))
-                        .map(l -> Papi.setPapi(player, l))
-                        .map(Colorize::text)
-                        .collect(Collectors.toList());
-                wrapper.lore(processedLore);
+                wrapper.displayName(applyDefaultPlaceholders(button.displayName()));
+                wrapper.lore(button.lore().stream()
+                        .map(this::applyDefaultPlaceholders)
+                        .collect(Collectors.toList()));
 
                 wrapper.customModelData(button.customModelData());
                 wrapper.enchanted(button.enchanted());
@@ -126,7 +117,7 @@ public class RanksGui extends Gui {
         List<String> ranksStr = new ArrayList<>(ranks.keySet());
 
         int totalPages = (int) Math.ceil((double) ranksStr.size() / itemsPerPage);
-        Button templateButton = buttons.get(0);
+        Button button = buttons.get(0);
 
         for (int page = 0; page < totalPages; page++) {
             int start = page * itemsPerPage;
@@ -151,24 +142,19 @@ public class RanksGui extends Gui {
                 final Rank rank = ranks.get(rankId);
 
                 consumers[i] = builder -> {
-                    ItemStack clonedItem = templateButton.itemStack().clone();
+                    replaceMemberPlaceholders(rank);
+                    ItemStack clonedItem = button.itemStack().clone();
                     ItemWrapper wrapper = new ItemWrapper(clonedItem);
 
-                    String rawDisplayName = templateButton.displayName();
-                    String processedDisplayName = replaceMemberPlaceholders(rawDisplayName, rank);
-                    processedDisplayName = Papi.setPapi(getPlayer(), processedDisplayName);
-                    wrapper.displayName(Colorize.text(processedDisplayName));
+                    wrapper.displayName(applyDefaultPlaceholders(button.displayName()));
 
-                    List<String> rawLore = templateButton.lore();
-                    List<String> processedLore = rawLore.stream()
-                            .map(l -> replaceMemberPlaceholders(l, rank))
-                            .map(l -> Papi.setPapi(getPlayer(), l))
-                            .map(Colorize::text)
+                    List<String> processedLore = button.lore().stream()
+                            .map(this::applyDefaultPlaceholders)
                             .collect(Collectors.toList());
                     wrapper.lore(processedLore);
 
-                    wrapper.customModelData(templateButton.customModelData());
-                    wrapper.enchanted(templateButton.enchanted());
+                    wrapper.customModelData(button.customModelData());
+                    wrapper.enchanted(button.enchanted());
                     wrapper.update();
 
                     builder.slots(slot);
@@ -179,7 +165,7 @@ public class RanksGui extends Gui {
                         Bukkit.getScheduler().runTaskLater(getPlugin(), () ->
                                 GuiFactory.create(
                                                 getPlugin(),
-                                                getPlugin().getGuiLoader().getMenus().get(templateButton.openGui()),
+                                                getPlugin().getGuiLoader().getMenus().get(button.openGui()),
                                                 getPlayer(), getClan(), rank)
                                         .open(getPlayer()), 1L);
                     });
@@ -191,19 +177,16 @@ public class RanksGui extends Gui {
         }
     }
 
-    private String replaceMemberPlaceholders(String text, Rank rank) {
-        if (text == null) return null;
-
-        text = text.replace("%invite_status%", getStatus(rank.perms().contains(RankPerms.INVITE)));
-        text = text.replace("%kick_status%", getStatus(rank.perms().contains(RankPerms.KICK)));
-        text = text.replace("%base_status%", getStatus(rank.perms().contains(RankPerms.BASE)));
-        text = text.replace("%setrank_status%", getStatus(rank.perms().contains(RankPerms.SETRANK)));
-        text = text.replace("%setbase_status%", getStatus(rank.perms().contains(RankPerms.SETBASE)));
-        text = text.replace("%deposit_status%", getStatus(rank.perms().contains(RankPerms.DEPOSIT)));
-        text = text.replace("%withdraw_status%", getStatus(rank.perms().contains(RankPerms.WITHDRAW)));
-        text = text.replace("%pvp_status%", getStatus(rank.perms().contains(RankPerms.PVP)));
-        text = text.replace("%rank%", rank.name());
-        return text;
+    private void replaceMemberPlaceholders(Rank rank) {
+        setCustomPlaceholder("%invite_status%", getStatus(rank.perms().contains(RankPerms.INVITE)));
+        setCustomPlaceholder("%kick_status%", getStatus(rank.perms().contains(RankPerms.KICK)));
+        setCustomPlaceholder("%base_status%", getStatus(rank.perms().contains(RankPerms.BASE)));
+        setCustomPlaceholder("%setrank_status%", getStatus(rank.perms().contains(RankPerms.SETRANK)));
+        setCustomPlaceholder("%setbase_status%", getStatus(rank.perms().contains(RankPerms.SETBASE)));
+        setCustomPlaceholder("%deposit_status%", getStatus(rank.perms().contains(RankPerms.DEPOSIT)));
+        setCustomPlaceholder("%withdraw_status%", getStatus(rank.perms().contains(RankPerms.WITHDRAW)));
+        setCustomPlaceholder("%pvp_status%", getStatus(rank.perms().contains(RankPerms.PVP)));
+        setCustomPlaceholder("%rank%", rank.name());
     }
 
     private String getStatus(boolean status) {

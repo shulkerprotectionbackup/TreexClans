@@ -52,9 +52,12 @@ public class ClanPlaceholder extends PlaceholderExpansion {
                 if (!plugin.getClanManager().isInClan(player.getUniqueId())) yield "0";
                 yield String.valueOf(clan.getLevel());
             }
-            case "clan_exp" -> {
-                if (!plugin.getClanManager().isInClan(player.getUniqueId())) yield "0";
-                yield String.valueOf(clan.getExp());
+            case "clan" -> {
+                if (args[1].equalsIgnoreCase("exp")) {
+                    if (!plugin.getClanManager().isInClan(player.getUniqueId())) yield "0";
+                    yield String.valueOf(clan.getExp());
+                }
+                yield "";
             }
             case "exp" -> {
                 if (!plugin.getClanManager().isInClan(player.getUniqueId())) yield "0";

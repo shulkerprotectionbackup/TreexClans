@@ -23,9 +23,6 @@ public class Member {
     private Map<UUID, Color> glowColors;
     private int kills;
     private int deaths;
-    private int warWins;
-    private int warParticipated;
-    private int warLoses;
 
     public void addCoin(int a) {
         coin = coin+a;

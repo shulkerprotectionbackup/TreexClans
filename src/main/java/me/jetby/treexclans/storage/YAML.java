@@ -254,10 +254,8 @@ public class YAML implements Storage {
 
         return new Member(uuid, rank, joinedAt, lastOnline, glow, false, coin, exp, colors,
                 member.getInt("kills", 0),
-                member.getInt("deaths", 0),
-                member.getInt("war-wins", 0),
-                member.getInt("war-participated", 0),
-                member.getInt("war-loses", 0));
+                member.getInt("deaths", 0)
+                );
     }
 
     private void setMember(Member member, Clan clan, String path) {
@@ -270,9 +268,6 @@ public class YAML implements Storage {
         configuration.set(clan.getId() + "." + path + ".exp", member.getExp());
         configuration.set(clan.getId() + "." + path + ".kills", member.getKills());
         configuration.set(clan.getId() + "." + path + ".deaths", member.getDeaths());
-        configuration.set(clan.getId() + "." + path + ".war-wins", member.getWarWins());
-        configuration.set(clan.getId() + "." + path + ".war-participated", member.getWarParticipated());
-        configuration.set(clan.getId() + "." + path + ".war-loses", member.getWarLoses());
         List<String> colors = new ArrayList<>();
         for (Map.Entry<UUID, Color> entry : member.getGlowColors().entrySet()) {
             UUID id = entry.getKey();

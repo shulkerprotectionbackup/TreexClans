@@ -50,7 +50,7 @@ public class AcceptSubcommand implements Subcommand {
                         System.currentTimeMillis() ,
                         false, false,
                         0, 0, new HashMap<>(),
-                        0,0,0,0,0
+                        0,0
                 );
                 plugin.getLang().sendMessage(player, clan, "clan-join",
                         new Lang.ReplaceString("{player}", player.getName()),

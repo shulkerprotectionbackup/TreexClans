@@ -1,10 +1,7 @@
 package me.jetby.treexclans.gui.core;
 
 import com.jodexindustries.jguiwrapper.api.item.ItemWrapper;
-import com.jodexindustries.jguiwrapper.api.placeholder.PlaceholderEngine;
 import com.jodexindustries.jguiwrapper.gui.advanced.GuiItemController;
-import me.jetby.treex.text.Colorize;
-import me.jetby.treex.text.Papi;
 import me.jetby.treexclans.TreexClans;
 import me.jetby.treexclans.clan.Clan;
 import me.jetby.treexclans.clan.Member;
@@ -18,7 +15,6 @@ import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.persistence.PersistentDataType;
-import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
@@ -27,7 +23,6 @@ import java.util.Objects;
 import java.util.function.Consumer;
 import java.util.stream.Collectors;
 
-import static me.jetby.treexclans.TreexClans.LOGGER;
 import static me.jetby.treexclans.TreexClans.NAMESPACED_KEY;
 
 public class TopClansGui extends Gui {
@@ -52,15 +47,19 @@ public class TopClansGui extends Gui {
                 break;
             }
             case "filter": {
-                if (s+1>getTops(button).size()) s = 0;
+                if (s + 1 > getTops(button).size()) s = 0;
                 builder.defaultItem(ItemWrapper.builder(button.itemStack().getType())
-                                .displayName(button.displayName())
-                                .lore(button.lore().stream().map(s1 -> setPlaceholders(s1, null)).toList())
+                        .displayName(applyDefaultPlaceholders(button.displayName()))
+                        .lore(button.lore()
+                                .stream()
+                                .map(this::getCurrentSort)
+                                .map(this::applyDefaultPlaceholders)
+                                .toList())
                         .build());
                 builder.defaultClickHandler((event, controller) -> {
                     close(player);
                     Bukkit.getScheduler().runTaskLater(getPlugin(), () -> {
-                        GuiFactory.create(getPlugin(), getMenu(), player, getClan(), getTops(button).get(s), s+1).open(player);
+                        GuiFactory.create(getPlugin(), getMenu(), player, getClan(), getTops(button).get(s), s + 1).open(player);
                     }, 1L);
                 });
                 break;
@@ -99,7 +98,7 @@ public class TopClansGui extends Gui {
 
         List<Clan> clans = new ArrayList<>();
         int a = 1;
-        for (Button button : clanButtons) {
+        for (Button ignored : clanButtons) {
             Clan clan = getPlugin().getTopManager().getTopClan(currentSort, a);
             if (clan != null) {
                 clans.add(clan);
@@ -124,6 +123,8 @@ public class TopClansGui extends Gui {
                 int clanIndex = start + i;
                 int slot = sortedClansSlots.get(i);
                 topNum++;
+
+
                 if (clanIndex >= end) {
                     consumers[i] = builder -> {
                         builder.slots(slot);
@@ -144,27 +145,20 @@ public class TopClansGui extends Gui {
                 }
 
                 int finalTopNum = topNum;
+
                 consumers[i] = builder -> {
+                    setPlaceholders(clan);
                     ItemStack itemStack = SkullCreator.itemFromUuid(clan.getLeader().getUuid());
                     ItemMeta meta = itemStack.getItemMeta();
                     meta.getPersistentDataContainer().set(NAMESPACED_KEY, PersistentDataType.STRING, "clans");
                     itemStack.setItemMeta(meta);
                     ItemWrapper wrapper = new ItemWrapper(itemStack);
 
-                    String processedDisplayName = setPlaceholders(
-                            applyDefaultPlaceholders(button.displayName()),
-                            clan
-                    );
-                    processedDisplayName = Papi.setPapi(getPlayer(), processedDisplayName);
-                    processedDisplayName = processedDisplayName.replace("%top_num%", String.valueOf(finalTopNum));
-                    wrapper.displayName(Colorize.text(processedDisplayName));
+                    setCustomPlaceholder("%top_num%", String.valueOf(finalTopNum));
+                    wrapper.displayName(applyDefaultPlaceholders(button.displayName()));
 
                     List<String> processedLore = button.lore().stream()
                             .map(this::applyDefaultPlaceholders)
-                            .map(l -> setPlaceholders(l, clan))
-                            .map(l -> Papi.setPapi(getPlayer(), l))
-                            .map(l -> l.replace("%top_num%", String.valueOf(finalTopNum)))
-                            .map(Colorize::text)
                             .collect(Collectors.toList());
                     wrapper.lore(processedLore);
 
@@ -174,7 +168,6 @@ public class TopClansGui extends Gui {
 
                     builder.defaultItem(wrapper);
                     builder.slots(slot);
-                    builder.defaultClickHandler((event, ctrl) -> event.setCancelled(true));
                 };
             }
 
@@ -214,44 +207,8 @@ public class TopClansGui extends Gui {
 
         return list;
     }
-    private String setPlaceholders(String text, Clan clan) {
-        if (text == null) return null;
 
-        if (currentSort==TopType.KILLS) {
-            text = text.replace("%top_kills_set%", getPlugin().getLang().getMessage("gui.tops.kills.set"));
-        } else {
-            text = text.replace("%top_kills_set%", getPlugin().getLang().getMessage("gui.tops.kills.unset"));
-        }
-        if (currentSort==TopType.DEATHS) {
-            text = text.replace("%top_deaths_set%", getPlugin().getLang().getMessage("gui.tops.deaths.set"));
-        } else {
-            text = text.replace("%top_deaths_set%", getPlugin().getLang().getMessage("gui.tops.deaths.unset"));
-        }
-        if (currentSort==TopType.KD) {
-            text = text.replace("%top_kd_set%", getPlugin().getLang().getMessage("gui.tops.kd.set"));
-        } else {
-            text = text.replace("%top_kd_set%", getPlugin().getLang().getMessage("gui.tops.kd.unset"));
-        }
-        if (currentSort==TopType.BALANCE) {
-            text = text.replace("%top_balance_set%", getPlugin().getLang().getMessage("gui.tops.balance.set"));
-        } else {
-            text = text.replace("%top_balance_set%", getPlugin().getLang().getMessage("gui.tops.balance.unset"));
-        }
-        if (currentSort==TopType.LEVEL) {
-            text = text.replace("%top_level_set%", getPlugin().getLang().getMessage("gui.tops.level.set"));
-        } else {
-            text = text.replace("%top_level_set%", getPlugin().getLang().getMessage("gui.tops.level.unset"));
-        }
-        if (currentSort==TopType.MEMBERS) {
-            text = text.replace("%top_members_set%", getPlugin().getLang().getMessage("gui.tops.members.set"));
-        } else {
-            text = text.replace("%top_members_set%", getPlugin().getLang().getMessage("gui.tops.members.unset"));
-        }
-
-
-        if (clan==null) return text;
-
-        text = text.replace("%level%", clan.getLevel().id());
+    private void setPlaceholders(Clan clan) {
 
         int kills = 0;
         int deaths = 0;
@@ -261,31 +218,41 @@ public class TopClansGui extends Gui {
         }
 
         if (clan.getPrefix() != null) {
-            text = text.replace("%prefix%", clan.getPrefix());
+            setCustomPlaceholder("%prefix%", clan.getPrefix());
         } else {
-            text = text.replace("%prefix%", clan.getId().toUpperCase());
+            setCustomPlaceholder("%prefix%", clan.getId().toUpperCase());
         }
 
         OfflinePlayer leader = Bukkit.getOfflinePlayer(clan.getLeader().getUuid());
         String leaderName = leader.getName() != null ? leader.getName() : "Unknown";
-        text = text.replace("%leader_name%", leaderName);
-        text = text.replace("%kills%", String.valueOf(kills));
-        text = text.replace("%deaths%", String.valueOf(deaths));
-        text = text.replace("%kd%", calculateKD(kills, deaths));
-        text = text.replace("%balance%", String.valueOf(clan.getBalance()));
+        setCustomPlaceholder("%level%", clan.getLevel().id());
+        setCustomPlaceholder("%leader_name%", leaderName);
+        setCustomPlaceholder("%kills%", String.valueOf(kills));
+        setCustomPlaceholder("%deaths%", String.valueOf(deaths));
+        setCustomPlaceholder("%kd%", calculateKD(kills, deaths));
+        setCustomPlaceholder("%balance%", String.valueOf(clan.getBalance()));
+    }
 
-
-
+    private String getCurrentSort(String text) {
+        if (text == null) return null;
+        text = text.replace("%top_kills_set%", getPlugin().getLang().getMessage("gui.tops.kills.unset"));
+        text = text.replace("%top_deaths_set%", getPlugin().getLang().getMessage("gui.tops.deaths.unset"));
+        text = text.replace("%top_kd_set%", getPlugin().getLang().getMessage("gui.tops.kd.unset"));
+        text = text.replace("%top_balance_set%", getPlugin().getLang().getMessage("gui.tops.balance.unset"));
+        text = text.replace("%top_level_set%", getPlugin().getLang().getMessage("gui.tops.level.unset"));
+        text = text.replace("%top_members_set%", getPlugin().getLang().getMessage("gui.tops.members.unset"));
+        switch (currentSort) {
+            case KILLS -> text = text.replace("%top_kills_set%", getPlugin().getLang().getMessage("gui.tops.kills.set"));
+            case DEATHS -> text = text.replace("%top_deaths_set%", getPlugin().getLang().getMessage("gui.tops.deaths.set"));
+            case KD -> text = text.replace("%top_kd_set%", getPlugin().getLang().getMessage("gui.tops.kd.set"));
+            case BALANCE -> text = text.replace("%top_balance_set%", getPlugin().getLang().getMessage("gui.tops.balance.set"));
+            case LEVEL -> text = text.replace("%top_level_set%", getPlugin().getLang().getMessage("gui.tops.level.set"));
+            case MEMBERS -> text = text.replace("%top_members_set%", getPlugin().getLang().getMessage("gui.tops.members.set"));
+        }
         return text;
     }
 
     private String calculateKD(int kills, int deaths) {
         return deaths == 0 ? kills + "" : NumberUtils.formatWithCommas((double) kills / deaths);
-    }
-
-    private double calculateClanKD(Clan clan) {
-        int kills = clan.getMembersWithLeader().stream().mapToInt(Member::getKills).sum();
-        int deaths = clan.getMembersWithLeader().stream().mapToInt(Member::getDeaths).sum();
-        return deaths == 0 ? kills : (double) kills / deaths;
     }
 }

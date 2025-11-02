@@ -28,7 +28,7 @@ public class DisbandSubcommand implements Subcommand {
             if (Cooldown.isOnCooldown("delete_" + player.getUniqueId())) {
                 if (clan.getLeader().getUuid().equals(player.getUniqueId())) {
                     plugin.getLang().sendMessage(player, clan, "clan-disband");
-                    plugin.getClanManager().deleteClan(clan);
+                    plugin.getClanManager().deleteClan(clan, player);
                 }
             } else {
                 if (clan.getLeader().getUuid().equals(player.getUniqueId())) {

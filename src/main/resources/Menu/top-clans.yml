@@ -12,7 +12,6 @@ listen: top_clans
 Items:
 
   clans:
-    material: basehead-%player_name%
     type: clans
     display_name: "&6#%top_num% %prefix% &8(%clan_tag%)"
     slot:
@@ -30,9 +29,6 @@ Items:
       - "&6☠ &fСмертей: &6&l%deaths%"
       - "&6🛡 &fК/Д: &6&l%kd%"
       - "&6$ &fБаланс: &6&l%balance%"
-      # - "&6🏹 &fПобед в клановых войнах: &6&l%war_wins%"
-      # - "&6🏹 &fУчастий в клановых войнах: &6&l%war_participated%"
-      # - "&6🏹 &fПоражений в клановых войнах: &6&l%war_loses%"
       - "&6&m                    "
 
 

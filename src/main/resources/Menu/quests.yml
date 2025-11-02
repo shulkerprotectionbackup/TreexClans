@@ -6,9 +6,11 @@ open_args:
   - 'quests'
 
 listen: quests
+
+# Available types
+# all_quests
+# category-<id>
 Items:
-
-
   quest1:
     slot:
       - '10-16'

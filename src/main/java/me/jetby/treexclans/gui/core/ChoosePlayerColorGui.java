@@ -77,7 +77,7 @@ public class ChoosePlayerColorGui extends Gui {
 
         int totalPages = (int) Math.ceil((double) members.size() / itemsPerPage);
 
-        Button memberButton = memberButtons.get(0);
+        Button button = memberButtons.get(0);
 
         for (int page = 0; page < totalPages; page++) {
             int start = page * itemsPerPage;
@@ -113,14 +113,14 @@ public class ChoosePlayerColorGui extends Gui {
 
                     ItemWrapper wrapper = new ItemWrapper(itemStack);
 
-                    wrapper.displayName(applyDefaultPlaceholders(memberButton.displayName()));
-                    List<String> processedLore = memberButton.lore().stream()
+                    wrapper.displayName(applyDefaultPlaceholders(button.displayName()));
+                    List<String> processedLore = button.lore().stream()
                             .map(this::applyDefaultPlaceholders)
                             .collect(Collectors.toList());
                     wrapper.lore(processedLore);
 
-                    wrapper.customModelData(memberButton.customModelData());
-                    wrapper.enchanted(memberButton.enchanted());
+                    wrapper.customModelData(button.customModelData());
+                    wrapper.enchanted(button.enchanted());
                     wrapper.update();
 
                     builder.defaultItem(wrapper);
@@ -131,7 +131,7 @@ public class ChoosePlayerColorGui extends Gui {
                         Bukkit.getScheduler().runTaskLater(getPlugin(), () ->
                                 GuiFactory.create(
                                                 getPlugin(),
-                                                getPlugin().getGuiLoader().getMenus().get(memberButton.openGui()),
+                                                getPlugin().getGuiLoader().getMenus().get(button.openGui()),
                                                 getPlayer(), getClan(), member)
                                         .open(getPlayer()), 1L);
                     });

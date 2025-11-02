@@ -39,21 +39,11 @@ public class CreateSubcommand implements Subcommand {
                     plugin.getLang().sendMessage(player, null, "clan-is-already-exists");
                     return true;
                 }
-                Member leader = new Member(
-                        player.getUniqueId(),
-                        plugin.getCfg().getLeaderRank(),
-                        System.currentTimeMillis(),
-                        System.currentTimeMillis() ,
-                        false, false,
-                        0, 0, new HashMap<>(),
-                        0,0,0,0,0
-
-                );
                 if (!clanManager.isAllowedName(player, clanName)) {
                     return true;
                 }
 
-                if (clanManager.createClan(clanName, leader)) {
+                if (clanManager.createClan(clanName, player)) {
                     Clan clan = plugin.getClanManager().getClan(clanName);
                     plugin.getLang().sendMessage(player, clan, "clan-create", new Lang.ReplaceString("{clan}", clanName));
                 }
