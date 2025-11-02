@@ -47,7 +47,10 @@ public class GuiLoader {
 
         LOGGER.success("------------------------");
         if (!folder.exists() && folder.mkdirs()) {
-            String[] defaults = {"main.yml", "quests.yml", "members.yml", "choose-player-color.yml", "glow-color.yml", "rank-perms.yml", "ranks.yml", "storage.yml"};
+            String[] defaults = {
+                    "main.yml", "quests.yml", "members.yml", "choose-player-color.yml",
+                    "glow-color.yml", "rank-perms.yml", "ranks.yml", "storage.yml", "top-clans.yml", "shop.yml"
+            };
 
             for (String name : defaults) {
                 File target = new File(folder, name);

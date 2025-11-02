@@ -167,7 +167,9 @@ public abstract class Gui extends PaginatedAdvancedGui implements Listener {
                 if (!cancelRegistration(player, selectedButton)) {
 
                     registerItem(selectedButton.id() + selectedButton.slot(), builder -> {
-                        builder.slots(finalSelectedButton.slot());
+                        if (finalSelectedButton.slot()!=-1) {
+                            builder.slots(finalSelectedButton.slot());
+                        }
 
                         boolean isFreeSlot = finalSelectedButton.freeSlot();
                         if (!isFreeSlot) {

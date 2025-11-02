@@ -32,6 +32,7 @@ public class ChestGui extends Gui {
     private int currentPage = 0;
     private BukkitTask autoSaveTask;
     private boolean isInitialized = false;
+    private Button blockedSlot;
 
     public ChestGui(TreexClans plugin, @Nullable Menu menu, Player player, Clan clan) {
         super(plugin, menu, player, clan);
@@ -100,18 +101,11 @@ public class ChestGui extends Gui {
                 if (globalIndex >= maxChestSlots) {
                     consumers[i] = builder -> {
                         builder.slots(guiSlot);
-                        ItemWrapper barrier = ItemWrapper.builder(Material.BARRIER)
-                                .displayName("§c§lСлот заблокирован")
-                                .lore(Arrays.asList(
-                                        "§7Этот слот недоступен.",
-                                        "§7Повысьте уровень клана,",
-                                        "§7чтобы разблокировать больше слотов."
-                                ))
-                                .build();
+                        ItemWrapper barrier = new ItemWrapper(blockedSlot.itemStack());
 
                         ItemMeta meta = barrier.itemStack().getItemMeta();
                         if (meta != null) {
-                            meta.getPersistentDataContainer().set(NAMESPACED_KEY, PersistentDataType.STRING, "locked_slot");
+                            meta.getPersistentDataContainer().set(NAMESPACED_KEY, PersistentDataType.STRING, "blocked_slot");
                             barrier.itemStack().setItemMeta(meta);
                         }
 
@@ -137,6 +131,10 @@ public class ChestGui extends Gui {
         String type = button.type().toLowerCase();
 
         if ("item".equals(type) || "chest".equals(type)) {
+            return;
+        }
+        if (button.type().equalsIgnoreCase("blocked-slot")) {
+            blockedSlot = button;
             return;
         }
 
