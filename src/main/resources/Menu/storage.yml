@@ -13,6 +13,7 @@ listen: chest
 Items:
 
   bs:
+    slot: -1
     type: blocked-slot
     material: BARRIER
     display_name: "&c&lСлот заблокирован"
