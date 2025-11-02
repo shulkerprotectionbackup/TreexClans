@@ -2,9 +2,11 @@ package me.jetby.treexclans.commands.clan;
 
 import me.jetby.treex.text.Colorize;
 import me.jetby.treexclans.TreexClans;
+import me.jetby.treexclans.api.CustomCommandApi;
 import me.jetby.treexclans.clan.Clan;
 import me.jetby.treexclans.clan.Member;
 import me.jetby.treexclans.clan.rank.RankPerms;
+import me.jetby.treexclans.commands.Subcommand;
 import me.jetby.treexclans.gui.GuiFactory;
 import me.jetby.treexclans.gui.GuiType;
 import me.jetby.treexclans.gui.Menu;
@@ -29,6 +31,7 @@ public class ClanCommand implements CommandExecutor, TabCompleter {
     public ClanCommand(TreexClans plugin) {
         this.plugin = plugin;
         plugin.getGuiLoader().getMenus().forEach((key, item) -> menuArgs.put(key, item.openArgs()));
+
     }
 
     @Override
@@ -48,6 +51,12 @@ public class ClanCommand implements CommandExecutor, TabCompleter {
 
                 return true;
             }
+            var apiArg = CustomCommandApi.getSubcommands().get(args[0]);
+            if (apiArg != null && apiArg.type() == CustomCommandApi.CommandType.CLAN) {
+                apiArg.onCommand(sender, Arrays.copyOfRange(args, 1, args.length));
+                return true;
+            }
+
             if (plugin.getClanManager().isInClan(player.getUniqueId())) {
 
                 Clan clan = plugin.getClanManager().getClanByMember(player.getUniqueId());
@@ -71,7 +80,6 @@ public class ClanCommand implements CommandExecutor, TabCompleter {
         }
         return true;
     }
-
     @Override
     public @Nullable List<String> onTabComplete(@NotNull CommandSender sender, @NotNull Command command, @NotNull String s, @NotNull String[] args) {
         if (args.length == 1) {

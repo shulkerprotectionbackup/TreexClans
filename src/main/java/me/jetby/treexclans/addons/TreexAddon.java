@@ -39,9 +39,6 @@ public abstract class TreexAddon {
         }
     }
 
-
-
-
     public abstract void onEnable();
 
 

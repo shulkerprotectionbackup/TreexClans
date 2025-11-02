@@ -1,5 +1,6 @@
 package me.jetby.treexclans.commands.admin;
 
+import me.jetby.treexclans.api.CustomCommandApi;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
@@ -16,17 +17,24 @@ public class AdminCommand implements CommandExecutor, TabCompleter {
     public boolean onCommand(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, @NotNull String[] args) {
         if (!sender.hasPermission("clan.admin")) return true;
         if (args.length < 1) {
-            sender.sendMessage("§cUsage: /"+command.getName()+" <subcommand> [args]");
+            sender.sendMessage("§cUsage: /" + command.getName() + " <subcommand> [args]");
             return true;
         }
         try {
+            var apiArg = CustomCommandApi.getSubcommands().get(args[0]);
+            if (apiArg != null && apiArg.type() == CustomCommandApi.CommandType.ADMIN) {
+                apiArg.onCommand(sender, Arrays.copyOfRange(args, 1, args.length));
+                return true;
+            }
+
             var arg = AdminCommandArgs.valueOf(args[0].toUpperCase());
             arg.getSubcommand().onCommand(sender, Arrays.copyOfRange(args, 1, args.length));
         } catch (IllegalArgumentException e) {
-            sender.sendMessage("§cUnknown subcommand. Use /"+command.getName()+" for help.");
+            sender.sendMessage("§cUnknown subcommand. Use /" + command.getName() + " for help.");
         }
         return true;
     }
+
 
     @Override
     public @Nullable List<String> onTabComplete(@NotNull CommandSender sender, @NotNull Command command, @NotNull String s, @NotNull String[] args) {
@@ -39,6 +47,8 @@ public class AdminCommand implements CommandExecutor, TabCompleter {
         try {
             var arg = AdminCommandArgs.valueOf(args[0].toUpperCase());
             return arg.getSubcommand().onTabCompleter(sender, command, s, args);
-        } catch (IllegalArgumentException e) { return List.of(); }
+        } catch (IllegalArgumentException e) {
+            return List.of();
+        }
     }
 }

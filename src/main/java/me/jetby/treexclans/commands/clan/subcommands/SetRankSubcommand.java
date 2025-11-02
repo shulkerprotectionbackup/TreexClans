@@ -1,6 +1,7 @@
 package me.jetby.treexclans.commands.clan.subcommands;
 
 import me.jetby.treexclans.TreexClans;
+import me.jetby.treexclans.api.CustomCommandApi;
 import me.jetby.treexclans.clan.Clan;
 import me.jetby.treexclans.clan.Member;
 import me.jetby.treexclans.clan.rank.Rank;
@@ -104,5 +105,10 @@ public class SetRankSubcommand implements Subcommand {
             }
         }
         return null;
+    }
+
+    @Override
+    public CustomCommandApi.CommandType type() {
+        return CustomCommandApi.CommandType.CLAN;
     }
 }

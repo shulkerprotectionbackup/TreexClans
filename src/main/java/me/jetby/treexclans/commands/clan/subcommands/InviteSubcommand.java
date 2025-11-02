@@ -1,6 +1,7 @@
 package me.jetby.treexclans.commands.clan.subcommands;
 
 import me.jetby.treexclans.TreexClans;
+import me.jetby.treexclans.api.CustomCommandApi;
 import me.jetby.treexclans.clan.rank.RankPerms;
 import me.jetby.treexclans.commands.Subcommand;
 import me.jetby.treexclans.configurations.Lang;
@@ -77,5 +78,10 @@ public class InviteSubcommand implements Subcommand {
             return new ArrayList<>((Bukkit.getOnlinePlayers().stream().map(Player::getName).collect(Collectors.toList())));
         }
         return List.of();
+    }
+
+    @Override
+    public CustomCommandApi.CommandType type() {
+        return CustomCommandApi.CommandType.CLAN;
     }
 }

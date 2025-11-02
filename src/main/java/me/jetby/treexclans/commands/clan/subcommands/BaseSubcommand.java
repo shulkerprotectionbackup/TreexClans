@@ -1,6 +1,7 @@
 package me.jetby.treexclans.commands.clan.subcommands;
 
 import me.jetby.treexclans.TreexClans;
+import me.jetby.treexclans.api.CustomCommandApi;
 import me.jetby.treexclans.clan.rank.RankPerms;
 import me.jetby.treexclans.commands.Subcommand;
 import me.jetby.treexclans.clan.Clan;
@@ -40,5 +41,10 @@ public class BaseSubcommand implements Subcommand {
     @Override
     public @Nullable List<String> onTabCompleter(@NotNull CommandSender sender, @NotNull Command command, @NotNull String s, @NotNull String[] args) {
         return List.of();
+    }
+
+    @Override
+    public CustomCommandApi.CommandType type() {
+        return CustomCommandApi.CommandType.CLAN;
     }
 }

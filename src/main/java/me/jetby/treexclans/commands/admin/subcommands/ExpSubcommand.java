@@ -1,6 +1,7 @@
 package me.jetby.treexclans.commands.admin.subcommands;
 
 
+import me.jetby.treexclans.api.CustomCommandApi;
 import me.jetby.treexclans.commands.Subcommand;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
@@ -21,5 +22,10 @@ public class ExpSubcommand implements Subcommand {
     @Override
     public @Nullable List<String> onTabCompleter(@NotNull CommandSender sender, @NotNull Command command, @NotNull String s, @NotNull String[] args) {
         return List.of();
+    }
+
+    @Override
+    public CustomCommandApi.CommandType type() {
+        return CustomCommandApi.CommandType.ADMIN;
     }
 }
