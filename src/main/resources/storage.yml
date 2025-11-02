@@ -4,14 +4,14 @@ sexy:
       display-name: '&4&lЛидер'
       permissions:
         ALWAYS: true
-        PVP: true
         SETBASE: true
-        WITHDRAW: true
         DEPOSIT: true
         BASE: true
-        INVITE: true
+        PVP: true
         SETRANK: true
         KICK: true
+        INVITE: true
+        WITHDRAW: true
     member:
       display-name: '&7Участник'
       permissions:
@@ -23,13 +23,13 @@ sexy:
       display-name: '&3Управляющий'
       permissions:
         ALWAYS: true
-        PVP: true
         SETBASE: true
-        WITHDRAW: true
         DEPOSIT: true
         BASE: true
-        INVITE: true
+        PVP: true
         KICK: true
+        INVITE: true
+        WITHDRAW: true
   balance: 25000.0
   level: '2'
   exp: 100

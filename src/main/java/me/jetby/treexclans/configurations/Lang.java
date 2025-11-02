@@ -26,7 +26,7 @@ public class Lang {
 
         File[] files = langFolder.listFiles();
 
-        String[] defaults = {"ru.yml", "en.yml", "es.yml", "de.yml", "zh.yml", "uk.yml"};
+        String[] defaults = {"ru.yml"};
 
         for (String name : defaults) {
             File target = new File(langFolder, name);
