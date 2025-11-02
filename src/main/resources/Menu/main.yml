@@ -21,17 +21,6 @@ Items:
       - "&6• &fОпыт: &6&l%clan_exp%&7/&c&l%clan_exp_max%"
       - "&6• &fУровень: &6&l%clan_level%"
 
-  war:
-    material: NETHERITE_SWORD
-    slot: 13
-    hide_attributes: true
-    display_name: "&6Клановая война"
-    lore:
-      - "&c&lДля использования этой функции"
-      - "&c&lкупите аддон ClanWar."
-    click_commands:
-      - '[message] &c&lДля использования этой функции'
-      - '[message] &c&lкупите аддон ClanWar.'
   chest:
     material: CHEST
     slot: 20
