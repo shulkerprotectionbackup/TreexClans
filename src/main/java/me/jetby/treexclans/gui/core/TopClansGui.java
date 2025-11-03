@@ -83,7 +83,7 @@ public class TopClansGui extends Gui {
 
     @Override
     public boolean cancelRegistration(Player player, @Nullable Button button) {
-        return button != null && (button.type().equals("clans"));
+        return button != null && (button.type().equalsIgnoreCase("clans"));
     }
 
     private void setupMembersPagination() {
@@ -96,36 +96,39 @@ public class TopClansGui extends Gui {
 
         int itemsPerPage = sortedClansSlots.size();
 
-        List<Clan> clans = new ArrayList<>();
-        int a = 1;
-        for (Button ignored : clanButtons) {
-            Clan clan = getPlugin().getTopManager().getTopClan(currentSort, a);
+        List<Clan> allClans = new ArrayList<>();
+        int maxClansToShow = 10000;
+
+        for (int i = 1; i <= maxClansToShow; i++) {
+            Clan clan = getPlugin().getTopManager().getTopClan(currentSort, i);
             if (clan != null) {
-                clans.add(clan);
+                allClans.add(clan);
+            } else {
+                break;
             }
-            a++;
         }
 
-        if (clans.isEmpty()) return;
+        if (allClans.isEmpty()) {
+            Bukkit.getLogger().warning("Top clans list is empty!");
+            return;
+        }
 
-        int totalPages = (int) Math.ceil((double) clans.size() / itemsPerPage);
+        int totalPages = (int) Math.ceil((double) allClans.size() / itemsPerPage);
 
         Button button = clanButtons.get(0);
 
         for (int page = 0; page < totalPages; page++) {
             int start = page * itemsPerPage;
-            int end = Math.min(start + itemsPerPage, clans.size());
+            int end = Math.min(start + itemsPerPage, allClans.size());
 
             Consumer<GuiItemController.Builder>[] consumers = new Consumer[itemsPerPage];
 
-            int topNum = 0;
             for (int i = 0; i < itemsPerPage; i++) {
                 int clanIndex = start + i;
                 int slot = sortedClansSlots.get(i);
-                topNum++;
+                int topNum = clanIndex + 1;
 
-
-                if (clanIndex >= end) {
+                if (clanIndex >= end || clanIndex >= allClans.size()) {
                     consumers[i] = builder -> {
                         builder.slots(slot);
                         builder.defaultItem(ItemWrapper.builder(Material.AIR).build());
@@ -134,7 +137,7 @@ public class TopClansGui extends Gui {
                     continue;
                 }
 
-                final Clan clan = clans.get(clanIndex);
+                final Clan clan = allClans.get(clanIndex);
                 if (clan == null) {
                     consumers[i] = builder -> {
                         builder.slots(slot);
@@ -172,7 +175,6 @@ public class TopClansGui extends Gui {
             }
 
             addPage(consumers);
-
         }
     }
 
@@ -235,12 +237,6 @@ public class TopClansGui extends Gui {
 
     private String getCurrentSort(String text) {
         if (text == null) return null;
-        text = text.replace("%top_kills_set%", getPlugin().getLang().getMessage("gui.tops.kills.unset"));
-        text = text.replace("%top_deaths_set%", getPlugin().getLang().getMessage("gui.tops.deaths.unset"));
-        text = text.replace("%top_kd_set%", getPlugin().getLang().getMessage("gui.tops.kd.unset"));
-        text = text.replace("%top_balance_set%", getPlugin().getLang().getMessage("gui.tops.balance.unset"));
-        text = text.replace("%top_level_set%", getPlugin().getLang().getMessage("gui.tops.level.unset"));
-        text = text.replace("%top_members_set%", getPlugin().getLang().getMessage("gui.tops.members.unset"));
         switch (currentSort) {
             case KILLS -> text = text.replace("%top_kills_set%", getPlugin().getLang().getMessage("gui.tops.kills.set"));
             case DEATHS -> text = text.replace("%top_deaths_set%", getPlugin().getLang().getMessage("gui.tops.deaths.set"));
@@ -249,6 +245,12 @@ public class TopClansGui extends Gui {
             case LEVEL -> text = text.replace("%top_level_set%", getPlugin().getLang().getMessage("gui.tops.level.set"));
             case MEMBERS -> text = text.replace("%top_members_set%", getPlugin().getLang().getMessage("gui.tops.members.set"));
         }
+        text = text.replace("%top_kills_set%", getPlugin().getLang().getMessage("gui.tops.kills.unset"));
+        text = text.replace("%top_deaths_set%", getPlugin().getLang().getMessage("gui.tops.deaths.unset"));
+        text = text.replace("%top_kd_set%", getPlugin().getLang().getMessage("gui.tops.kd.unset"));
+        text = text.replace("%top_balance_set%", getPlugin().getLang().getMessage("gui.tops.balance.unset"));
+        text = text.replace("%top_level_set%", getPlugin().getLang().getMessage("gui.tops.level.unset"));
+        text = text.replace("%top_members_set%", getPlugin().getLang().getMessage("gui.tops.members.unset"));
         return text;
     }
 
