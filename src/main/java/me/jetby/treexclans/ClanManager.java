@@ -129,7 +129,9 @@ public record ClanManager(TreexClans plugin) implements Listener {
             return false;
         }
 
-        // TODO: проверить что никаких символов и только англо буквы
+        if (!isAllowedRegex(clanName, plugin.getCfg().getRegex())) {
+            return false;
+        }
 //        plugin.getLang().sendMessage(player, null, "clan-tag-invalid-characters");
 
         for (SimpleRequirement requirement : plugin.getCfg().getRequirements()) {
@@ -148,6 +150,9 @@ public record ClanManager(TreexClans plugin) implements Listener {
             }
         }
         return true;
+    }
+    public boolean isAllowedRegex(String text, String regex) {
+        return text != null && text.matches(regex);
     }
 
     public void deleteClan(@NotNull Clan clan, @Nullable Player player) {

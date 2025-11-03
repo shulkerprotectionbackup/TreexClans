@@ -42,6 +42,7 @@ public class Config {
 
     private int minTagLength;
     private int maxTagLength;
+    private String regex;
     private List<String> blockedTags;
     private final List<SimpleRequirement> requirements = new ArrayList<>();
 
@@ -135,6 +136,7 @@ public class Config {
             minTagLength = clanCreate.getInt("min-clan-tag-length", 3);
             maxTagLength = clanCreate.getInt("max-clan-tag-length", 6);
             blockedTags = clanCreate.getStringList("blocked-tags");
+            regex = clanCreate.getString("regex", "^[A-Za-z0-9]+$");
         }
 
         for (String id : level.getKeys(false)) {
