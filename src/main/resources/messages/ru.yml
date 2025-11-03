@@ -58,6 +58,8 @@ commands:
 you-cant-leave-leader: "§cYou can't leave this clan because you are the leader. If you want disband this clan you can use /clan disband"
 player-not-found:
   - "[message] {prefix} &cИгрок не найден"
+disallowed-regex:
+  - "[message] {prefix} &cКлан тег содержит недопустимые символы"
 clan-does-not-exist:
   - "[message] {prefix} &cКлан {clan} не найден."
 clan-is-already-exists:

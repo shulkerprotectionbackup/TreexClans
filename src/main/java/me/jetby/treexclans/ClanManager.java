@@ -130,6 +130,7 @@ public record ClanManager(TreexClans plugin) implements Listener {
         }
 
         if (!isAllowedRegex(clanName, plugin.getCfg().getRegex())) {
+            plugin.getLang().sendMessage(player, null, "disallowed-regex");
             return false;
         }
 //        plugin.getLang().sendMessage(player, null, "clan-tag-invalid-characters");
