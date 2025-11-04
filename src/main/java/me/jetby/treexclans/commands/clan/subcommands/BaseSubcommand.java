@@ -2,9 +2,9 @@ package me.jetby.treexclans.commands.clan.subcommands;
 
 import me.jetby.treexclans.TreexClans;
 import me.jetby.treexclans.api.CustomCommandApi;
+import me.jetby.treexclans.clan.Clan;
 import me.jetby.treexclans.clan.rank.RankPerms;
 import me.jetby.treexclans.commands.Subcommand;
-import me.jetby.treexclans.clan.Clan;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
@@ -15,6 +15,7 @@ import java.util.List;
 
 public class BaseSubcommand implements Subcommand {
     private final TreexClans plugin = TreexClans.getInstance();
+
     @Override
     public boolean onCommand(@NotNull CommandSender sender, @NotNull String[] args) {
 
@@ -24,7 +25,7 @@ public class BaseSubcommand implements Subcommand {
                 return true;
             }
             Clan clan = plugin.getClanManager().getClanByMember(player.getUniqueId());
-            if (clan.getBase()==null) {
+            if (clan.getBase() == null) {
                 plugin.getLang().sendMessage(player, null, "clan-base-unset");
                 return true;
             }

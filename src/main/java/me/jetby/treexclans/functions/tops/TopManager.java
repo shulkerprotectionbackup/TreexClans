@@ -77,6 +77,7 @@ public class TopManager {
         }
         return null;
     }
+
     private Clan getTopLevel(int key) {
         if (key < 1) return null;
         List<Map.Entry<String, Clan>> sortedClans = clans.entrySet().stream()
@@ -90,6 +91,7 @@ public class TopManager {
         }
         return null;
     }
+
     private Clan getTopBalance(int key) {
         if (key < 1) return null;
         List<Map.Entry<String, Clan>> sortedClans = clans.entrySet().stream()
@@ -103,6 +105,7 @@ public class TopManager {
         }
         return null;
     }
+
     private Clan getTopDeaths(int key) {
         if (key < 1) return null;
         List<Map.Entry<String, Clan>> sortedClans = clans.entrySet().stream()

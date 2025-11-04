@@ -25,8 +25,8 @@ public class TreexAutoDownload implements Listener {
 
     public TreexAutoDownload(JavaPlugin plugin) throws IOException {
         this.plugin = plugin;
-
-        if (Bukkit.getPluginManager().getPlugin("Treex") == null || !Bukkit.getPluginManager().getPlugin("Treex").isEnabled()) {
+        Plugin treex = Bukkit.getPluginManager().getPlugin("Treex");
+        if (treex == null || !treex.isEnabled()) {
             downloadAndLoad(getRaw("https://raw.githubusercontent.com/MrJetby/Treex/refs/heads/master/DOWNLOAD_LINK"));
         }
         Treex.init(plugin);

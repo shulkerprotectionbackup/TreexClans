@@ -3,7 +3,6 @@ package me.jetby.treexclans.gui;
 import me.jetby.treexclans.TreexClans;
 import me.jetby.treexclans.clan.Clan;
 import org.bukkit.command.*;
-import org.bukkit.command.Command;
 import org.bukkit.command.defaults.BukkitCommand;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -36,7 +35,7 @@ public class CommandRegistrar extends BukkitCommand implements CommandExecutor {
             return true;
         }
         Clan clan = plugin.getClanManager().getClanByMember(player.getUniqueId());
-        if (clan==null) {
+        if (clan == null) {
             plugin.getLang().sendMessage(player, null, "your-not-in-clan");
             return true;
         }

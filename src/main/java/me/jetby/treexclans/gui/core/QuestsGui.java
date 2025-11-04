@@ -8,8 +8,9 @@ import me.jetby.treexclans.clan.Clan;
 import me.jetby.treexclans.clan.Member;
 import me.jetby.treexclans.functions.quests.Quest;
 import me.jetby.treexclans.functions.quests.QuestProgressType;
-import me.jetby.treexclans.gui.*;
+import me.jetby.treexclans.gui.Button;
 import me.jetby.treexclans.gui.Gui;
+import me.jetby.treexclans.gui.Menu;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
@@ -17,7 +18,9 @@ import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.persistence.PersistentDataType;
 
 import javax.annotation.Nullable;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Set;
 import java.util.function.Consumer;
 import java.util.stream.Collectors;
 
@@ -43,7 +46,7 @@ public class QuestsGui extends Gui {
 
     @Override
     public boolean cancelRegistration(Player player, @Nullable Button button) {
-        if (button!=null) {
+        if (button != null) {
             return button.type().equals("all_quests") || button.type().startsWith("category-");
         }
         return false;
@@ -124,7 +127,7 @@ public class QuestsGui extends Gui {
                     builder.defaultClickHandler((event, ctrl) -> event.setCancelled(true));
                 };
             }
-            if (consumers[page]==null) continue;
+            if (consumers[page] == null) continue;
             addPage(consumers);
         }
     }
@@ -136,6 +139,7 @@ public class QuestsGui extends Gui {
             return getPlugin().getLang().getMessage("quest-status-uncompleted");
         }
     }
+
     private String progressType(Quest quest) {
         if (quest.progressType().equals(QuestProgressType.INDIVIDUAL)) {
             return getPlugin().getLang().getMessage("quest-progress-type-individual");

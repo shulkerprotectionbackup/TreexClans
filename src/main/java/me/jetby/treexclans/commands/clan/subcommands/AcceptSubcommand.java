@@ -2,10 +2,10 @@ package me.jetby.treexclans.commands.clan.subcommands;
 
 import me.jetby.treexclans.TreexClans;
 import me.jetby.treexclans.api.CustomCommandApi;
-import me.jetby.treexclans.commands.Subcommand;
-import me.jetby.treexclans.configurations.Lang;
 import me.jetby.treexclans.clan.Clan;
 import me.jetby.treexclans.clan.Member;
+import me.jetby.treexclans.commands.Subcommand;
+import me.jetby.treexclans.configurations.Lang;
 import me.jetby.treexclans.tools.Cooldown;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
@@ -18,18 +18,18 @@ import java.util.List;
 
 public class AcceptSubcommand implements Subcommand {
     private final TreexClans plugin = TreexClans.getInstance();
+
     @Override
     public boolean onCommand(@NotNull CommandSender sender, @NotNull String[] args) {
 
 
-
         if (sender instanceof Player player) {
-            if (args.length==0) {
+            if (args.length == 0) {
                 plugin.getLang().sendMessage(player, null, "commands.accept");
                 return true;
             }
             if (plugin.getClanManager().isInClan(player.getUniqueId())) {
-                    plugin.getLang().sendMessage(player, null, "your-already-in-clan");
+                plugin.getLang().sendMessage(player, null, "your-already-in-clan");
                 return true;
             }
             if (!plugin.getClanManager().clanExists(args[0])) {
@@ -37,20 +37,20 @@ public class AcceptSubcommand implements Subcommand {
 
                 return true;
             }
-            if (!Cooldown.isOnCooldown("invite_"+player.getUniqueId()+"_"+args[0])) {
+            if (!Cooldown.isOnCooldown("invite_" + player.getUniqueId() + "_" + args[0])) {
                 sender.sendMessage("§cYou have no pending clan invites.");
                 return true;
             } else {
-                Cooldown.removeCooldown("invite_"+player.getUniqueId()+"_"+args[0]);
+                Cooldown.removeCooldown("invite_" + player.getUniqueId() + "_" + args[0]);
                 Clan clan = plugin.getClanManager().getClan(args[0]);
                 Member member = new Member(
                         player.getUniqueId(),
                         plugin.getCfg().getDefaultRank(),
                         System.currentTimeMillis(),
-                        System.currentTimeMillis() ,
+                        System.currentTimeMillis(),
                         false, false,
                         0, 0, new HashMap<>(),
-                        0,0
+                        0, 0
                 );
                 plugin.getLang().sendMessage(player, clan, "clan-join",
                         new Lang.ReplaceString("{player}", player.getName()),

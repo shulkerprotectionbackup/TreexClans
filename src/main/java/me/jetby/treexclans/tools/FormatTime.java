@@ -57,12 +57,13 @@ public class FormatTime {
 
         return format;
     }
+
     public String stringFormat(long totalSeconds) {
-        int weeks = ((int) totalSeconds/1000) / (7 * 24 * 3600);
-        int days = (((int) totalSeconds/1000) % (7 * 24 * 3600)) / (24 * 3600);
-        int hours = (((int) totalSeconds/1000) % (24 * 3600)) / 3600;
-        int minutes = (((int) totalSeconds/1000) % 3600) / 60;
-        int seconds = ((int) totalSeconds/1000) % 60;
+        int weeks = ((int) totalSeconds / 1000) / (7 * 24 * 3600);
+        int days = (((int) totalSeconds / 1000) % (7 * 24 * 3600)) / (24 * 3600);
+        int hours = (((int) totalSeconds / 1000) % (24 * 3600)) / 3600;
+        int minutes = (((int) totalSeconds / 1000) % 3600) / 60;
+        int seconds = ((int) totalSeconds / 1000) % 60;
 
         Map<String, String> timeUnits = new HashMap<>(6, 100);
 

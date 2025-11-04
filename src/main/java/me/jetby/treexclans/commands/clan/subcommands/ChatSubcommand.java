@@ -2,9 +2,9 @@ package me.jetby.treexclans.commands.clan.subcommands;
 
 import me.jetby.treexclans.TreexClans;
 import me.jetby.treexclans.api.CustomCommandApi;
-import me.jetby.treexclans.commands.Subcommand;
 import me.jetby.treexclans.clan.Clan;
 import me.jetby.treexclans.clan.Member;
+import me.jetby.treexclans.commands.Subcommand;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
@@ -15,6 +15,7 @@ import java.util.List;
 
 public class ChatSubcommand implements Subcommand {
     private final TreexClans plugin = TreexClans.getInstance();
+
     @Override
     public boolean onCommand(@NotNull CommandSender sender, @NotNull String[] args) {
         if (sender instanceof Player player) {
@@ -23,7 +24,7 @@ public class ChatSubcommand implements Subcommand {
                 return true;
             }
 
-            if (args.length==0) {
+            if (args.length == 0) {
                 Member member = plugin.getClanManager().getClanByMember(player.getUniqueId()).getMember(player.getUniqueId());
                 if (!member.isChat()) {
                     plugin.getLang().sendMessage(player, null, "clan-chat-on");

@@ -3,6 +3,8 @@ package me.jetby.treexclans.configurations;
 
 import lombok.AccessLevel;
 import lombok.Getter;
+import lombok.Setter;
+import me.jetby.treex.text.Colorize;
 import me.jetby.treexclans.TreexClans;
 import me.jetby.treexclans.clan.Clan;
 import me.jetby.treexclans.clan.Level;
@@ -30,13 +32,24 @@ public class Config {
     private final FileConfiguration level;
 
     private final Map<Integer, Level> levels = new LinkedHashMap<>();
-    private final Map<String, Clan> clans = new HashMap<>();
+    @Setter
+    private Map<String, Clan> clans = new HashMap<>();
 
     private final Map<String, Rank> defaultRanks = new HashMap<>();
     private Rank defaultRank;
     private Rank leaderRank;
 
     private String chatFormat;
+
+    private String prefixPlaceholder_hasPrefix;
+    private String prefixPlaceholder_noPrefix;
+    private String prefixPlaceholder_noClan;
+    private int prefixMinLength;
+    private int prefixMaxLength;
+    private String prefixRegex;
+
+    private String tagPlaceholder_hasClan;
+    private String tagPlaceholder_noClan;
 
     private String formattedTimeFormat;
 
@@ -64,6 +77,24 @@ public class Config {
         blockedTags = null;
         defaultRanks.clear();
         levels.clear();
+
+        ConfigurationSection prefix = configuration.getConfigurationSection("prefix");
+        if (prefix == null) prefix = configuration.createSection("prefix");
+        prefixMinLength = prefix.getInt("min-clan-prefix-length", 3);
+        prefixMaxLength = prefix.getInt("max-clan-prefix-length", 16);
+        prefixRegex = prefix.getString("regex", "^[A-Za-z0-9]+$");
+
+        ConfigurationSection prefixPlaceholder = prefix.getConfigurationSection("placeholder");
+        if (prefixPlaceholder == null) prefixPlaceholder = prefix.createSection("placeholder");
+        prefixPlaceholder_hasPrefix = Colorize.text(prefixPlaceholder.getString("has_prefix", ""));
+        prefixPlaceholder_noPrefix = Colorize.text(prefixPlaceholder.getString("no_prefix", ""));
+        prefixPlaceholder_noClan = Colorize.text(prefixPlaceholder.getString("no_clan", ""));
+
+
+        ConfigurationSection tag = configuration.getConfigurationSection("tag-placeholder");
+        if (tag == null) tag = configuration.createSection("tag-placeholder");
+        tagPlaceholder_hasClan = Colorize.text(tag.getString("has_clan"));
+        tagPlaceholder_noClan = Colorize.text(tag.getString("no_clan"));
 
 
         formattedTimeFormat = configuration.getString("placeholder-show-format", "%weeks% %days% %hours% %minutes% %seconds%");
@@ -103,6 +134,12 @@ public class Config {
                             case "pvp" -> {
                                 if (permission.getBoolean(perm)) perms.add(RankPerms.PVP);
                             }
+                            case "setslogan" -> {
+                                if (permission.getBoolean(perm)) perms.add(RankPerms.SETSLOGAN);
+                            }
+                            case "setprefix" -> {
+                                if (permission.getBoolean(perm)) perms.add(RankPerms.SETPREFIX);
+                            }
                         }
 
                     }
@@ -141,7 +178,7 @@ public class Config {
 
         for (String id : level.getKeys(false)) {
             ConfigurationSection lSection = level.getConfigurationSection(id);
-            if (lSection==null) continue;
+            if (lSection == null) continue;
             int exp = lSection.getInt("exp", 0);
             int chest = lSection.getInt("chest", 10);
             int maxMembers = lSection.getInt("max-members", 1);
@@ -154,4 +191,5 @@ public class Config {
         gradualQuest = configuration.getBoolean("gradual-quest", false);
         chatFormat = configuration.getString("chat-format", "<#FFE259>&l[TreexClans]</#FFA751> &e&l{player} &7▶ &f{message}");
     }
+
 }

@@ -20,10 +20,12 @@ public enum ClanCommandArgs {
     BASE(new BaseSubcommand()),
     LEAVE(new LeaveSubcommand()),
     CHAT(new ChatSubcommand()),
+    SETSLOGAN(new SetSloganSubcommand()),
+    SETPREFIX(new SetPrefixSubcommand()),
     PVP(new PvpSubcommand());
 
     @Getter
-    private Subcommand subcommand;
+    private final Subcommand subcommand;
 
     ClanCommandArgs(Subcommand subcommand) {
         this.subcommand = subcommand;

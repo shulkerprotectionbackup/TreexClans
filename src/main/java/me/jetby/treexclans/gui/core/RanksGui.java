@@ -2,8 +2,6 @@ package me.jetby.treexclans.gui.core;
 
 import com.jodexindustries.jguiwrapper.api.item.ItemWrapper;
 import com.jodexindustries.jguiwrapper.gui.advanced.GuiItemController;
-import me.jetby.treex.text.Colorize;
-import me.jetby.treex.text.Papi;
 import me.jetby.treexclans.TreexClans;
 import me.jetby.treexclans.clan.Clan;
 import me.jetby.treexclans.clan.rank.Rank;
@@ -14,7 +12,6 @@ import me.jetby.treexclans.gui.GuiFactory;
 import me.jetby.treexclans.gui.Menu;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
-import org.bukkit.entity.HumanEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
@@ -52,6 +49,7 @@ public class RanksGui extends Gui {
                 if (rank == null) {
                     break;
                 }
+                replaceMemberPlaceholders(rank);
 
                 ItemWrapper wrapper = new ItemWrapper(button.itemStack());
                 wrapper.displayName(applyDefaultPlaceholders(button.displayName()));
@@ -186,6 +184,8 @@ public class RanksGui extends Gui {
         setCustomPlaceholder("%deposit_status%", getStatus(rank.perms().contains(RankPerms.DEPOSIT)));
         setCustomPlaceholder("%withdraw_status%", getStatus(rank.perms().contains(RankPerms.WITHDRAW)));
         setCustomPlaceholder("%pvp_status%", getStatus(rank.perms().contains(RankPerms.PVP)));
+        setCustomPlaceholder("%setslogan_status%", getStatus(rank.perms().contains(RankPerms.SETSLOGAN)));
+        setCustomPlaceholder("%setprefix_status%", getStatus(rank.perms().contains(RankPerms.SETPREFIX)));
         setCustomPlaceholder("%rank%", rank.name());
     }
 

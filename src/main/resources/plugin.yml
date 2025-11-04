@@ -1,5 +1,5 @@
 name: TreexClans
-version: '1.0'
+version: '${project.version}'
 main: me.jetby.treexclans.TreexClans
 api-version: '1.16'
 load: POSTWORLD
@@ -12,5 +12,5 @@ softdepend:
   - Treex
   - PlaceholderAPI
 commands:
-  xclan: {}
-  clan: {}
+  xclan: { }
+  clan: { }

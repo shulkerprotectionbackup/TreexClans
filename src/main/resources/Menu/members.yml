@@ -2,7 +2,7 @@ id: members
 title: "&0&lУчастники клана"
 size: 54
 open_permission: none
-open_args: {}
+open_args: { }
 
 listen: members
 

@@ -1,3 +1,4 @@
+config-version: 1
 
 lang: ru
 
@@ -32,6 +33,19 @@ clan-create:
 
 chat-format: "<#FFE259>&l[TreexClans]</#FFA751> &e&l{player} &7▶ &f{message}"
 
+prefix:
+  placeholder:
+    has_prefix: "&7[&6{prefix}&7]"
+    no_prefix: "&8[&e{tag}&8]"
+    no_clan: ""
+  min-clan-prefix-length: 3
+  max-clan-prefix-length: 16
+  regex: "^[A-Za-z0-9]+$"
+
+tag-placeholder:
+  has_clan: "&8[&e{tag}&8]"
+  no_clan: ""
+
 # Если true то квесты будут выполнятся постепенно, то есть нельзя перейти на другой квест пока не выполнишь предыдущий
 # Если false то можно выполнить любой квест не смотря на очерёдность
 gradual-quest: true
@@ -49,6 +63,8 @@ ranks:
       deposit: true
       withdraw: false
       pvp: false
+      setslogan: false
+      setprefix: false
   CONTROL:
     display-name: "&3Управляющий"
     permissions:
@@ -60,6 +76,8 @@ ranks:
       deposit: true
       withdraw: true
       pvp: true
+      setslogan: false
+      setprefix: false
   LEADER:
     display-name: "&4&lЛидер"
     permissions:
@@ -71,6 +89,8 @@ ranks:
       deposit: true
       withdraw: true
       pvp: true
+      setslogan: true
+      setprefix: true
 
 
 placeholder-show-format: "%weeks% %days% %hours% %minutes%"

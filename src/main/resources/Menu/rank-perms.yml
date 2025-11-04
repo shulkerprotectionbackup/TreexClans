@@ -2,7 +2,7 @@ id: rank-perms
 title: "&0&lПрава"
 size: 27
 open_permission: none
-open_commands: {}
+open_commands: { }
 
 listen: rank_permissions
 
@@ -53,6 +53,18 @@ Items:
     slot: 7
     type: perm-pvp
     display_name: "&6⚐ &fПереключать pvp %pvp_status%"
+
+
+  setslogan:
+    slot: 8
+    type: perm-setslogan
+    display_name: "&6⚐ &fПереключать pvp %setslogan_status%"
+
+
+  setprefix:
+    slot: 9
+    type: perm-setprefix
+    display_name: "&6⚐ &fПереключать pvp %setprefix_status%"
 
 
 

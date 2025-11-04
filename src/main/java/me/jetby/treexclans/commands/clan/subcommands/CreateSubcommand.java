@@ -3,19 +3,15 @@ package me.jetby.treexclans.commands.clan.subcommands;
 import me.jetby.treexclans.ClanManager;
 import me.jetby.treexclans.TreexClans;
 import me.jetby.treexclans.api.CustomCommandApi;
-import me.jetby.treexclans.api.events.OnClanCreate;
+import me.jetby.treexclans.clan.Clan;
 import me.jetby.treexclans.commands.Subcommand;
 import me.jetby.treexclans.configurations.Lang;
-import me.jetby.treexclans.clan.Clan;
-import me.jetby.treexclans.clan.Member;
-import org.bukkit.Bukkit;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.HashMap;
 import java.util.List;
 
 public class CreateSubcommand implements Subcommand {

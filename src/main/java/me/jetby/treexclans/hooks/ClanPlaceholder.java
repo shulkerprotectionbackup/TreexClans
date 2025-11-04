@@ -40,9 +40,32 @@ public class ClanPlaceholder extends PlaceholderExpansion {
         Clan clan = plugin.getClanManager().getClanByMember(player.getUniqueId());
 
         return switch (args[0].toLowerCase()) {
+            case "tag" -> {
+                if (!plugin.getClanManager().isInClan(player.getUniqueId()))
+                    yield plugin.getCfg().getTagPlaceholder_noClan();
+
+                yield plugin.getCfg().getTagPlaceholder_hasClan()
+                        .replace("{tag}", clan.getId())
+                        .replace("{prefix}", clan.getPrefix() == null ? "" : clan.getPrefix());
+            }
+            case "prefix" -> {
+                if (!plugin.getClanManager().isInClan(player.getUniqueId()))
+                    yield plugin.getCfg().getPrefixPlaceholder_noClan()
+                            .replace("{tag}", clan.getId());
+                if (clan.getPrefix() == null) yield plugin.getCfg().getPrefixPlaceholder_noPrefix()
+                        .replace("{tag}", clan.getId());
+
+                yield plugin.getCfg().getPrefixPlaceholder_hasPrefix()
+                        .replace("{tag}", clan.getId())
+                        .replace("{prefix}", clan.getPrefix());
+            }
             case "coin" -> {
                 if (!plugin.getClanManager().isInClan(player.getUniqueId())) yield "0";
                 yield String.valueOf(clan.getMember(player.getUniqueId()).getCoin());
+            }
+            case "slogan" -> {
+                if (!plugin.getClanManager().isInClan(player.getUniqueId())) yield "";
+                yield clan.getSlogan();
             }
             case "balance" -> {
                 if (!plugin.getClanManager().isInClan(player.getUniqueId())) yield "0";

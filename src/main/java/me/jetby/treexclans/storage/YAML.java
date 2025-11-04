@@ -3,7 +3,6 @@ package me.jetby.treexclans.storage;
 import me.jetby.treex.bukkit.LocationHandler;
 import me.jetby.treexclans.TreexClans;
 import me.jetby.treexclans.clan.Clan;
-import me.jetby.treexclans.clan.Level;
 import me.jetby.treexclans.clan.Member;
 import me.jetby.treexclans.clan.rank.Rank;
 import me.jetby.treexclans.clan.rank.RankPerms;
@@ -47,6 +46,7 @@ public class YAML implements Storage {
             String level = clan.getString("level", "1");
             int clanExp = clan.getInt("exp", 0);
             boolean pvp = clan.getBoolean("pvp", false);
+            String slogan = clan.getString("slogan", "");
 
 
             String leaderUUID = clan.getString("leader.uuid");
@@ -89,6 +89,12 @@ public class YAML implements Storage {
                             }
                             case "pvp" -> {
                                 if (permission.getBoolean(perm)) perms.add(RankPerms.PVP);
+                            }
+                            case "setslogan" -> {
+                                if (permission.getBoolean(perm)) perms.add(RankPerms.SETSLOGAN);
+                            }
+                            case "setprefix" -> {
+                                if (permission.getBoolean(perm)) perms.add(RankPerms.SETPREFIX);
                             }
                         }
 
@@ -146,7 +152,7 @@ public class YAML implements Storage {
 
             Map<UUID, List<String>> completedQuests = new HashMap<>();
             ConfigurationSection quests = clan.getConfigurationSection("quests-completed");
-            if (quests!=null) {
+            if (quests != null) {
                 for (String uid : quests.getKeys(false)) {
                     try {
                         completedQuests.put(UUID.fromString(uid), quests.getStringList(uid));
@@ -160,7 +166,7 @@ public class YAML implements Storage {
 
             plugin.getCfg().getClans().put(clanId, new Clan(clanId, prefix, leader, memberSet, ranks,
                     plugin.getCfg().getLevels().get(Integer.parseInt(level)),
-                    balance, base, clanExp, pvp, questsInProgress, completedQuests, chestItems));
+                    balance, base, clanExp, pvp, questsInProgress, completedQuests, chestItems, slogan));
         }
     }
 
@@ -184,6 +190,7 @@ public class YAML implements Storage {
                     }
                 }
 
+                configuration.set(clanId + ".slogan", clan.getSlogan());
                 configuration.set(clanId + ".balance", clan.getBalance());
                 configuration.set(clanId + ".level", clan.getLevel().id());
                 configuration.set(clanId + ".exp", clan.getExp());
@@ -200,7 +207,7 @@ public class YAML implements Storage {
                 }
 
                 for (Map.Entry<UUID, List<String>> entry : clan.getCompletedQuest().entrySet()) {
-                    configuration.set(clanId + ".quests-completed."+entry.getKey().toString(), entry.getValue());
+                    configuration.set(clanId + ".quests-completed." + entry.getKey().toString(), entry.getValue());
                 }
 
 
@@ -255,7 +262,7 @@ public class YAML implements Storage {
         return new Member(uuid, rank, joinedAt, lastOnline, glow, false, coin, exp, colors,
                 member.getInt("kills", 0),
                 member.getInt("deaths", 0)
-                );
+        );
     }
 
     private void setMember(Member member, Clan clan, String path) {

@@ -98,14 +98,16 @@ public record ClanManager(TreexClans plugin) implements Listener {
                     player.getUniqueId(),
                     plugin.getCfg().getLeaderRank(),
                     System.currentTimeMillis(),
-                    System.currentTimeMillis() ,
+                    System.currentTimeMillis(),
                     false, false,
                     0, 0, new HashMap<>(),
-                    0,0
+                    0, 0
 
             );
             Clan clan = new Clan(clanName, null, leader, new HashSet<>(), plugin.getCfg().getDefaultRanks(),
-                    plugin.getCfg().getLevels().getOrDefault(1, new Level("1", 0, 1,0,1, new ArrayList<>(), new ArrayList<>())), 0.0, null, 0, false, new HashMap<>(), new HashMap<>(), new ArrayList<>());
+                    plugin.getCfg().getLevels().getOrDefault(1,
+                            new Level("1", 0, 1, 0, 1, new ArrayList<>(), new ArrayList<>())),
+                    0.0, null, 0, false, new HashMap<>(), new HashMap<>(), new ArrayList<>(), "");
             plugin.getCfg().getClans().put(clanName, clan);
             Bukkit.getPluginManager().callEvent(new OnClanCreate(clan, player));
             return true;
@@ -130,7 +132,7 @@ public record ClanManager(TreexClans plugin) implements Listener {
         }
 
         if (!isAllowedRegex(clanName, plugin.getCfg().getRegex())) {
-            plugin.getLang().sendMessage(player, null, "disallowed-regex");
+            plugin.getLang().sendMessage(player, null, "disallowed-tag-regex");
             return false;
         }
 //        plugin.getLang().sendMessage(player, null, "clan-tag-invalid-characters");
@@ -138,7 +140,7 @@ public record ClanManager(TreexClans plugin) implements Listener {
         for (SimpleRequirement requirement : plugin.getCfg().getRequirements()) {
             if (!Requirements.check(player, requirement)) {
                 ActionContext ctx = new ActionContext(player);
-                List<String> commands = new ArrayList<>( requirement.denyActions());
+                List<String> commands = new ArrayList<>(requirement.denyActions());
                 commands = commands.stream()
                         .map(l -> Papi.setPapi(player, l))
                         .map(s -> s.replace("{name}", clanName))
@@ -152,6 +154,33 @@ public record ClanManager(TreexClans plugin) implements Listener {
         }
         return true;
     }
+
+    public boolean isAllowedPrefix(Player player, String prefix) {
+
+        if (prefix.length() < plugin.getCfg().getPrefixMinLength()) {
+            plugin.getLang().sendMessage(player, null, "clan-prefix-too-short",
+                    new Lang.ReplaceString("{min_length}", String.valueOf(plugin.getCfg().getPrefixMinLength())));
+            return false;
+        }
+        if (prefix.length() > plugin.getCfg().getPrefixMaxLength()) {
+            plugin.getLang().sendMessage(player, null, "clan-prefix-too-long",
+                    new Lang.ReplaceString("{max_length}", String.valueOf(plugin.getCfg().getPrefixMaxLength())));
+            return false;
+        }
+
+        if (plugin.getCfg().getBlockedTags().contains(prefix.toLowerCase())) {
+            plugin.getLang().sendMessage(player, null, "clan-tag-blocked");
+            return false;
+        }
+
+        if (!isAllowedRegex(prefix, plugin.getCfg().getPrefixRegex())) {
+            plugin.getLang().sendMessage(player, null, "disallowed-prefix-regex");
+            return false;
+        }
+
+        return true;
+    }
+
     public boolean isAllowedRegex(String text, String regex) {
         return text != null && text.matches(regex);
     }
@@ -316,6 +345,7 @@ public record ClanManager(TreexClans plugin) implements Listener {
         }
         member.setGlowColors(colors);
     }
+
     public void setColor(@NotNull Member member, @NotNull Member target, @NotNull Color color) {
         member.getGlowColors().put(target.getUuid(), color);
     }

@@ -15,10 +15,11 @@ import org.jetbrains.annotations.NotNull;
 import java.util.*;
 
 @AllArgsConstructor
-@Getter @Setter
+@Getter
+@Setter
 public class Clan {
     private final String id;
-    private final String prefix;
+    private String prefix;
     private final Member leader;
     private final Set<Member> members;
     private final Map<String, Rank> ranks;
@@ -30,10 +31,12 @@ public class Clan {
     private Map<UUID, Map<String, Integer>> questsProgress;
     private Map<UUID, List<String>> completedQuest;
     private List<ItemStack> chest;
+    private String slogan;
 
     public void addMember(Member member) {
         this.members.add(member);
     }
+
     public Member getMember(UUID uuid) {
         if (leader.getUuid().equals(uuid)) {
             return leader;
@@ -43,61 +46,88 @@ public class Clan {
                 .findFirst()
                 .orElse(null);
     }
+
     public Set<Member> getMembersWithLeader() {
         Set<Member> list = new HashSet<>(members);
         list.add(leader);
         return list;
     }
+
     public void removeMember(Member member) {
         this.members.remove(member);
     }
 
 
-    public void addExp(int a, @NotNull Member member, Map<Integer, Level> levels) {
-        if (level.minExp()<=getExp()+a) {
-            setExp(0);
-            Level nextLevel = levels.get(Integer.parseInt(level.id())+1);
-            for (Member m : getMembersWithLeader()) {
-                ActionContext ctx = new ActionContext(Bukkit.getPlayer(m.getUuid()));
-                ctx.put("clan", this);
-                ctx.put("member", m);
-                ActionExecutor.execute(ctx, ActionRegistry.transform(nextLevel.levelUpActions()));
-            }
-            setLevel(levels.get(Integer.parseInt(nextLevel.id())));
+    public void addExp(int amount, @NotNull Member member, Map<Integer, Level> levels) {
+        int remaining = amount;
 
-        } else {
-            setExp(getExp()+a);
-        }
-        member.setExp(member.getExp()+a);
-    }
-    public void addExp(int a, Map<Integer, Level> levels) {
-        if (level.minExp()<=getExp()+a) {
-            setExp(0);
-            try {
-                Level nextLevel = levels.get(Integer.parseInt(level.id())+1);
+        while (remaining > 0) {
+            int toNext = level.minExp() - getExp();
+
+            if (remaining >= toNext) {
+                setExp(0);
+                remaining -= toNext;
+
+                Level nextLevel = levels.get(Integer.parseInt(level.id()) + 1);
+                if (nextLevel == null) break;
+
                 for (Member m : getMembersWithLeader()) {
                     ActionContext ctx = new ActionContext(Bukkit.getPlayer(m.getUuid()));
                     ctx.put("clan", this);
                     ctx.put("member", m);
                     ActionExecutor.execute(ctx, ActionRegistry.transform(nextLevel.levelUpActions()));
                 }
-                setLevel(levels.get(Integer.parseInt(nextLevel.id())));
-            } catch (NumberFormatException ignored) {}
-        } else {
-            setExp(getExp()+a);
+
+                setLevel(nextLevel);
+            } else {
+                setExp(getExp() + remaining);
+                remaining = 0;
+            }
+        }
+
+        member.setExp(member.getExp() + amount);
+    }
+
+    public void addExp(int amount, Map<Integer, Level> levels) {
+        int remaining = amount;
+
+        while (remaining > 0) {
+            int toNext = level.minExp() - getExp();
+
+            if (remaining >= toNext) {
+                setExp(0);
+                remaining -= toNext;
+
+                Level nextLevel = levels.get(Integer.parseInt(level.id()) + 1);
+                if (nextLevel == null) break;
+
+                for (Member m : getMembersWithLeader()) {
+                    ActionContext ctx = new ActionContext(Bukkit.getPlayer(m.getUuid()));
+                    ctx.put("clan", this);
+                    ctx.put("member", m);
+                    ActionExecutor.execute(ctx, ActionRegistry.transform(nextLevel.levelUpActions()));
+                }
+
+                setLevel(nextLevel);
+            } else {
+                setExp(getExp() + remaining);
+                remaining = 0;
+            }
         }
     }
 
+
     public int getExpToNextLevel() {
-        return level.minExp()-exp;
+        return level.minExp() - exp;
     }
 
     public void takeExp(int a, @NotNull Member member) {
-        setExp(getExp()-a);
-        member.setExp(member.getExp()-a);
+        setExp(getExp() - a);
+        member.setExp(member.getExp() - a);
     }
+
     public void takeExp(int a) {
-        setExp(getExp()-a);
+        setExp(getExp() - a);
     }
 
 }

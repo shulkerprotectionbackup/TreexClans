@@ -6,7 +6,7 @@ import me.jetby.treexclans.api.CustomCommandApi;
 import me.jetby.treexclans.clan.Clan;
 import me.jetby.treexclans.clan.Member;
 import me.jetby.treexclans.clan.rank.RankPerms;
-import me.jetby.treexclans.commands.Subcommand;
+import me.jetby.treexclans.gui.Gui;
 import me.jetby.treexclans.gui.GuiFactory;
 import me.jetby.treexclans.gui.GuiType;
 import me.jetby.treexclans.gui.Menu;
@@ -57,21 +57,39 @@ public class ClanCommand implements CommandExecutor, TabCompleter {
                 return true;
             }
 
-            if (plugin.getClanManager().isInClan(player.getUniqueId())) {
+            Clan clan = plugin.getClanManager().getClanByMember(player.getUniqueId());;
 
-                Clan clan = plugin.getClanManager().getClanByMember(player.getUniqueId());
-                for (Map.Entry<String, List<String>> entry : menuArgs.entrySet()) {
-                    if (entry.getValue().contains(args[0])) {
-                        GuiFactory.create(plugin, plugin.getGuiLoader().getMenus().get(entry.getKey())
-                                , player, clan).open(player);
+            for (Map.Entry<String, List<String>> entry : menuArgs.entrySet()) {
+                if (entry.getValue().contains(args[0])) {
+                    Menu menu = plugin.getGuiLoader().getMenus().get(entry.getKey());
+                    GuiType type = isBuiltInGuiType(menu.type()) ? GuiType.valueOf(menu.type()) : null;
+
+                    if (type == GuiType.DEFAULT || type == GuiType.TOP_CLANS) {
+                        Gui gui = GuiFactory.create(plugin, menu, player, clan);
+                        gui.open(player);
                         return true;
                     }
                 }
             }
 
+
         }
 
-
+        if (args[0].equalsIgnoreCase("glow")) {
+            if (!plugin.getModules().isGlow()) {
+                return true;
+            }
+        }
+        if (args[0].equalsIgnoreCase("setslogan")) {
+            if (!plugin.getModules().isSlogan()) {
+                return true;
+            }
+        }
+        if (args[0].equalsIgnoreCase("setprefix")) {
+            if (!plugin.getModules().isSetprefix()) {
+                return true;
+            }
+        }
         try {
             var arg = ClanCommandArgs.valueOf(args[0].toUpperCase());
             arg.getSubcommand().onCommand(sender, Arrays.copyOfRange(args, 1, args.length));
@@ -80,6 +98,7 @@ public class ClanCommand implements CommandExecutor, TabCompleter {
         }
         return true;
     }
+
     @Override
     public @Nullable List<String> onTabComplete(@NotNull CommandSender sender, @NotNull Command command, @NotNull String s, @NotNull String[] args) {
         if (args.length == 1) {
@@ -89,6 +108,12 @@ public class ClanCommand implements CommandExecutor, TabCompleter {
                     .map(Enum::name)
                     .map(String::toLowerCase)
                     .collect(Collectors.toList());
+
+            completions.removeIf(cmd -> switch (cmd) {
+                case "glow" -> !plugin.getModules().isGlow();
+                case "setslogan" -> !plugin.getModules().isSlogan();
+                default -> false;
+            });
 
             for (Map.Entry<String, List<String>> entry : menuArgs.entrySet()) {
                 Menu menu = plugin.getGuiLoader().getMenus().get(entry.getKey());
@@ -107,11 +132,26 @@ public class ClanCommand implements CommandExecutor, TabCompleter {
             }
 
             if (!plugin.getClanManager().isInClan(player.getUniqueId())) {
-                return completions.stream()
-                        .filter(cmd -> cmd.equals("create") || cmd.equals("accept"))
+                List<String> extra = completions.stream()
+                        .filter(cmd -> cmd.equalsIgnoreCase("create") || cmd.equalsIgnoreCase("accept"))
+                        .collect(Collectors.toList());
+
+                for (Map.Entry<String, List<String>> entry : menuArgs.entrySet()) {
+                    Menu menu = plugin.getGuiLoader().getMenus().get(entry.getKey());
+                    if (isBuiltInGuiType(menu.type())) {
+                        GuiType type = GuiType.valueOf(menu.type());
+                        if ((type == GuiType.DEFAULT || type == GuiType.TOP_CLANS)
+                                && player.hasPermission(menu.permission())) {
+                            extra.addAll(entry.getValue());
+                        }
+                    }
+                }
+
+                return extra.stream()
                         .filter(cmd -> cmd.startsWith(args[0].toLowerCase()))
                         .toList();
             }
+
             Clan clan = plugin.getClanManager().getClanByMember(player.getUniqueId());
             Member member = clan.getMember(player.getUniqueId());
 
@@ -128,6 +168,8 @@ public class ClanCommand implements CommandExecutor, TabCompleter {
                 case "deposit", "invest" -> !perms.contains(RankPerms.DEPOSIT) || plugin.getEconomy() == null;
                 case "kick" -> !perms.contains(RankPerms.KICK);
                 case "pvp" -> !perms.contains(RankPerms.PVP);
+                case "setslogan" -> !perms.contains(RankPerms.SETSLOGAN);
+                case "setprefix" -> !perms.contains(RankPerms.SETPREFIX);
                 default -> false;
             });
             completions.remove("create");

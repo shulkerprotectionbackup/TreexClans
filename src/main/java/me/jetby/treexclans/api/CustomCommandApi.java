@@ -17,6 +17,7 @@ public class CustomCommandApi {
         String lowerName = name.toLowerCase();
         subcommands.put(lowerName, subcommand);
     }
+
     public void unregister(String name) {
         subcommands.remove(name);
     }

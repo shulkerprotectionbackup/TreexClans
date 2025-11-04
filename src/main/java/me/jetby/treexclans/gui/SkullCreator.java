@@ -129,10 +129,9 @@ public class SkullCreator {
         notNull(item, "item");
         notNull(base64, "base64");
 
-        if (!(item.getItemMeta() instanceof SkullMeta)) {
+        if (!(item.getItemMeta() instanceof SkullMeta meta)) {
             return null;
         }
-        SkullMeta meta = (SkullMeta) item.getItemMeta();
         if (mutateWithNew || !mutateItemMeta(meta, base64)) {
             mutateNewItemMeta(meta, base64);
             mutateWithNew = true;

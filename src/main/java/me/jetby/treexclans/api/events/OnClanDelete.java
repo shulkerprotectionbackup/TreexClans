@@ -23,6 +23,7 @@ public class OnClanDelete extends Event implements Cancellable {
         this.clan = clan;
         this.player = player;
     }
+
     @Override
     public @NotNull HandlerList getHandlers() {
         return handlers;

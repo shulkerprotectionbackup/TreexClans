@@ -4,12 +4,10 @@ import me.jetby.treexclans.ClanManager;
 import me.jetby.treexclans.TreexClans;
 import me.jetby.treexclans.clan.Clan;
 import me.jetby.treexclans.clan.Member;
-import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
-import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.entity.PlayerDeathEvent;
 import org.bukkit.event.entity.ProjectileHitEvent;
 import org.bukkit.event.player.AsyncPlayerChatEvent;
@@ -51,6 +49,7 @@ public class ClanListeners implements Listener {
             }
         }
     }
+
     @EventHandler
     public void onTeamDamageByProjectile(ProjectileHitEvent e) {
         if (e.getEntity().getShooter() instanceof Player player) {

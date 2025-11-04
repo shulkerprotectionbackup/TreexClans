@@ -60,7 +60,7 @@ public class SetRankSubcommand implements Subcommand {
                 }
                 Member targetMember = clan.getMember(uuid);
 
-                if (target!=null && clan.getMember(player.getUniqueId()).equals(targetMember)) {
+                if (target != null && clan.getMember(player.getUniqueId()).equals(targetMember)) {
                     plugin.getLang().sendMessage(player, clan, "clan-you-cant-setrank-yourself");
                     return true;
                 }

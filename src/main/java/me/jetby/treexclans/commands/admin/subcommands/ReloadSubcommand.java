@@ -2,6 +2,7 @@ package me.jetby.treexclans.commands.admin.subcommands;
 
 import me.jetby.treexclans.TreexClans;
 import me.jetby.treexclans.api.CustomCommandApi;
+import me.jetby.treexclans.clan.Clan;
 import me.jetby.treexclans.commands.Subcommand;
 import me.jetby.treexclans.commands.clan.ClanCommand;
 import me.jetby.treexclans.configurations.Config;
@@ -13,6 +14,7 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
+import java.util.Map;
 
 public class ReloadSubcommand implements Subcommand {
     private final TreexClans plugin;
@@ -25,13 +27,16 @@ public class ReloadSubcommand implements Subcommand {
     public boolean onCommand(@NotNull CommandSender sender, @NotNull String[] args) {
 
 
+
         try {
             long start = System.currentTimeMillis();
 
             plugin.getStorage().save();
+            Map<String, Clan> clans = plugin.getCfg().getClans();
 
             Config cfg = new Config(plugin);
             cfg.load();
+            cfg.setClans(clans);
             plugin.setCfg(cfg);
 
             GuiLoader guiLoader = new GuiLoader(plugin, plugin.getDataFolder());
@@ -51,7 +56,7 @@ public class ReloadSubcommand implements Subcommand {
 
             plugin.getStorage().load();
 
-            sender.sendMessage("Reloaded by "+(System.currentTimeMillis()-start)+" ms");
+            sender.sendMessage("Reloaded by " + (System.currentTimeMillis() - start) + " ms");
         } catch (Exception e) {
             sender.sendMessage(e.getMessage());
         }

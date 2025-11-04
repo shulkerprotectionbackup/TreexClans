@@ -18,14 +18,12 @@ import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.inventory.meta.LeatherArmorMeta;
-import org.bukkit.persistence.PersistentDataType;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import java.io.File;
 import java.util.*;
 
 import static me.jetby.treexclans.TreexClans.LOGGER;
-import static me.jetby.treexclans.TreexClans.NAMESPACED_KEY;
 
 @RequiredArgsConstructor
 public class GuiLoader {
@@ -71,18 +69,18 @@ public class GuiLoader {
                 if (!file.getName().endsWith(".yml")) continue;
                 FileConfiguration config = YamlConfiguration.loadConfiguration(file);
                 loadMenu(config.getString("id", file.getName().replace(".yml", "")), file);
-                LOGGER.info(file.getName()+" (id: "+config.getString("id")+")" + " loaded");
+                LOGGER.info(file.getName() + " (id: " + config.getString("id") + ")" + " loaded");
             }
         }
         LOGGER.success("------------------------");
-        LOGGER.success(menus.size()+" menus has been founded");
+        LOGGER.success(menus.size() + " menus has been founded");
         LOGGER.success("------------------------");
     }
 
     private void loadMenu(String menuId, File file) {
 
         if (menus.containsKey(menuId)) {
-            LOGGER.error("A duplicate of "+menuId+" was found");
+            LOGGER.error("A duplicate of " + menuId + " was found");
             return;
         }
         try {
@@ -97,9 +95,9 @@ public class GuiLoader {
             List<String> openArgs = config.getStringList("open_args");
             List<Button> buttons = loadButtons(config);
 
-            menus.put(menuId, new Menu(menuId, title, type, size, inventoryType, permission, openCommands, openArgs,  buttons));
+            menus.put(menuId, new Menu(menuId, title, type, size, inventoryType, permission, openCommands, openArgs, buttons));
         } catch (Exception e) {
-            LOGGER.error("Error trying to load menu: "+e.getMessage());
+            LOGGER.error("Error trying to load menu: " + e.getMessage());
         }
     }
 
@@ -144,7 +142,7 @@ public class GuiLoader {
 
                     itemStack.setAmount(amount);
                     ItemMeta meta = itemStack.getItemMeta();
-                    if (meta!=null) {
+                    if (meta != null) {
                         if (hideAttributes) meta.addItemFlags(ItemFlag.HIDE_ATTRIBUTES);
                         meta.addItemFlags(ItemFlag.HIDE_DYE);
                         meta.setDisplayName(Colorize.text(displayName));
@@ -172,7 +170,7 @@ public class GuiLoader {
     }
 
     private List<ButtonCommand> loadCommands(ConfigurationSection itemSection) {
-        List<ButtonCommand> buttonCommands = new ArrayList<>( );
+        List<ButtonCommand> buttonCommands = new ArrayList<>();
 
         if (itemSection.contains("left_click_commands")) {
 
@@ -210,7 +208,7 @@ public class GuiLoader {
     }
 
     private List<ViewRequirement> requirements(ConfigurationSection itemSection, int slot) {
-        List<ViewRequirement> requirements = new ArrayList<>( );
+        List<ViewRequirement> requirements = new ArrayList<>();
         ConfigurationSection requirementsSection = itemSection.getConfigurationSection("view_requirements");
         if (requirementsSection == null) {
             return requirements;
@@ -232,8 +230,9 @@ public class GuiLoader {
         }
         return requirements;
     }
+
     private List<ClickRequirement> requirements(ConfigurationSection itemSection, String name, ClickType clickType, boolean anyClick) {
-        List<ClickRequirement> requirements = new ArrayList<>( );
+        List<ClickRequirement> requirements = new ArrayList<>();
         ConfigurationSection requirementsSection = itemSection.getConfigurationSection(name);
         if (requirementsSection == null) {
             return requirements;
@@ -252,12 +251,12 @@ public class GuiLoader {
     }
 
     private List<Integer> parseSlots(Object slotObject) {
-        List<Integer> slots = new ArrayList<>( );
+        List<Integer> slots = new ArrayList<>();
 
         if (slotObject instanceof Integer) {
             slots.add((Integer) slotObject);
         } else if (slotObject instanceof String) {
-            String slotString = ((String) slotObject).trim( );
+            String slotString = ((String) slotObject).trim();
             slots.addAll(parseSlotString(slotString));
         } else if (slotObject instanceof List<?>) {
             for (Object obj : (List<?>) slotObject) {
@@ -268,30 +267,30 @@ public class GuiLoader {
                 }
             }
         } else {
-            Bukkit.getLogger( ).warning("Unknown slot format: " + slotObject);
+            Bukkit.getLogger().warning("Unknown slot format: " + slotObject);
         }
 
         return slots;
     }
 
     private List<Integer> parseSlotString(String slotString) {
-        List<Integer> slots = new ArrayList<>( );
+        List<Integer> slots = new ArrayList<>();
         if (slotString.contains("-")) {
             try {
                 String[] range = slotString.split("-");
-                int start = Integer.parseInt(range[0].trim( ));
-                int end = Integer.parseInt(range[1].trim( ));
+                int start = Integer.parseInt(range[0].trim());
+                int end = Integer.parseInt(range[1].trim());
                 for (int i = start; i <= end; i++) {
                     slots.add(i);
                 }
             } catch (NumberFormatException e) {
-                Bukkit.getLogger( ).warning("Error parsing slot range: " + slotString);
+                Bukkit.getLogger().warning("Error parsing slot range: " + slotString);
             }
         } else {
             try {
                 slots.add(Integer.parseInt(slotString));
             } catch (NumberFormatException e) {
-                Bukkit.getLogger( ).warning("Error parsing single slot: " + slotString);
+                Bukkit.getLogger().warning("Error parsing single slot: " + slotString);
             }
         }
         return slots;

@@ -6,7 +6,7 @@
 
     <groupId>me.jetby</groupId>
     <artifactId>TreexClans</artifactId>
-    <version>1.1</version>
+    <version>1.2</version>
     <packaging>jar</packaging>
 
     <name>TreexClans</name>
@@ -31,13 +31,22 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-shade-plugin</artifactId>
-                <version>3.2.4</version>
+                <version>3.5.3</version>
                 <executions>
                     <execution>
                         <phase>package</phase>
                         <goals>
                             <goal>shade</goal>
                         </goals>
+                        <configuration>
+                            <relocations>
+                                <relocation>
+                                    <pattern>com.jodexindustries.jguiwrapper</pattern>
+                                    <shadedPattern>me.jetby.treexclans</shadedPattern>
+                                </relocation>
+                            </relocations>
+                            <minimizeJar>true</minimizeJar>
+                        </configuration>
                     </execution>
                 </executions>
             </plugin>
@@ -68,27 +77,27 @@
             <url>https://libraries.minecraft.net/</url>
         </repository>
         <repository>
+            <id>placeholderapi</id>
+            <url>https://repo.extendedclip.com/content/repositories/placeholderapi/</url>
+        </repository>
+        <repository>
             <id>Jodexindustries-releases</id>
             <name>JodexIndustries Repo</name>
             <url>https://repo.jodex.xyz/releases</url>
-        </repository>
-        <repository>
-            <id>placeholderapi</id>
-            <url>https://repo.extendedclip.com/content/repositories/placeholderapi/</url>
         </repository>
     </repositories>
 
     <dependencies>
         <dependency>
+            <groupId>com.github.MrJetby</groupId>
+            <artifactId>Treex</artifactId>
+            <version>0.1.4</version>
+            <scope>provided</scope>
+        </dependency>
+        <dependency>
             <groupId>com.jodexindustries.jguiwrapper</groupId>
             <artifactId>common</artifactId>
             <version>1.0.0.9-beta</version>
-        </dependency>
-        <dependency>
-            <groupId>com.github.MrJetby</groupId>
-            <artifactId>Treex</artifactId>
-            <version>169bf507</version>
-            <scope>provided</scope>
         </dependency>
         <dependency>
             <groupId>com.destroystokyo.paper</groupId>

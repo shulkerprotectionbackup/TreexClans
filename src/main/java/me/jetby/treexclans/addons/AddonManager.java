@@ -11,7 +11,10 @@ import java.net.URL;
 import java.net.URLClassLoader;
 import java.nio.file.Files;
 import java.nio.file.StandardCopyOption;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
 
@@ -130,7 +133,7 @@ public class AddonManager {
                     addonYaml.getString("author", "Unknown"),
                     addonYaml.getString("version", "1.0"),
                     addonYaml.getString("description", "")
-                    );
+            );
             addon.onEnable();
 
             loadedAddons.put(addon.getName(), addon);

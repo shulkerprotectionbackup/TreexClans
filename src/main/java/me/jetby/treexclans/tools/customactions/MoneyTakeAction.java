@@ -10,12 +10,13 @@ import static me.jetby.treexclans.TreexClans.LOGGER;
 
 public class MoneyTakeAction implements Action {
     private final TreexClans plugin = TreexClans.getInstance();
+
     @Override
     public void execute(@NotNull ActionContext ctx) {
         Player player = ctx.getPlayer();
         String message = ctx.get("message", String.class);
 
-        if (player!=null && message!=null && plugin.getEconomy()!=null) {
+        if (player != null && message != null && plugin.getEconomy() != null) {
             try {
                 int amount = Integer.parseInt(message);
                 plugin.getEconomy().withdrawPlayer(player, amount);

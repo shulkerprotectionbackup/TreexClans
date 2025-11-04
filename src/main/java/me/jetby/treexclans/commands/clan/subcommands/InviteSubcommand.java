@@ -2,10 +2,10 @@ package me.jetby.treexclans.commands.clan.subcommands;
 
 import me.jetby.treexclans.TreexClans;
 import me.jetby.treexclans.api.CustomCommandApi;
+import me.jetby.treexclans.clan.Clan;
 import me.jetby.treexclans.clan.rank.RankPerms;
 import me.jetby.treexclans.commands.Subcommand;
 import me.jetby.treexclans.configurations.Lang;
-import me.jetby.treexclans.clan.Clan;
 import me.jetby.treexclans.tools.Cooldown;
 import org.bukkit.Bukkit;
 import org.bukkit.command.Command;
@@ -20,11 +20,12 @@ import java.util.stream.Collectors;
 
 public class InviteSubcommand implements Subcommand {
     private final TreexClans plugin = TreexClans.getInstance();
+
     @Override
     public boolean onCommand(@NotNull CommandSender sender, @NotNull String[] args) {
 
         if (sender instanceof Player player) {
-            if (args.length==0) {
+            if (args.length == 0) {
                 plugin.getLang().sendMessage(player, null, "commands.invite");
                 return true;
             }
@@ -37,7 +38,7 @@ public class InviteSubcommand implements Subcommand {
                 plugin.getLang().sendMessage(player, clan, "your-rank-is-not-allowed-to-do-that");
                 return true;
             }
-            if (clan.getMembers().size()>=clan.getLevel().maxMembers()) {
+            if (clan.getMembers().size() >= clan.getLevel().maxMembers()) {
                 plugin.getLang().sendMessage(player, clan, "clan-invite-limit");
                 return true;
             }
@@ -52,11 +53,11 @@ public class InviteSubcommand implements Subcommand {
                 plugin.getLang().sendMessage(player, clan, "clan-player-already-in-clan");
                 return true;
             }
-            if (Cooldown.isOnCooldown("invite_"+target.getUniqueId()+"_"+clan.getId())) {
+            if (Cooldown.isOnCooldown("invite_" + target.getUniqueId() + "_" + clan.getId())) {
                 plugin.getLang().sendMessage(player, clan, "no-invite");
                 return true;
             } else {
-                Cooldown.setCooldown("invite_"+target.getUniqueId()+"_"+clan.getId(), 60);
+                Cooldown.setCooldown("invite_" + target.getUniqueId() + "_" + clan.getId(), 60);
                 plugin.getLang().sendMessage(player, clan, "clan-invite", new Lang.ReplaceString("{target}", target.getName()));
 
                 plugin.getLang().sendMessage(target, null, "clan-join-request",
@@ -74,7 +75,7 @@ public class InviteSubcommand implements Subcommand {
 
     @Override
     public @Nullable List<String> onTabCompleter(@NotNull CommandSender sender, @NotNull Command command, @NotNull String s, @NotNull String[] args) {
-        if (args.length>0) {
+        if (args.length > 0) {
             return new ArrayList<>((Bukkit.getOnlinePlayers().stream().map(Player::getName).collect(Collectors.toList())));
         }
         return List.of();

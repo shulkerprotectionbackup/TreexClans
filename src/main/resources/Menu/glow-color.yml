@@ -2,7 +2,7 @@ id: glow_color
 title: "&0&lВыбор цвета"
 size: 36
 open_permission: none
-open_args: {}
+open_args: { }
 
 listen: choose_color
 Items:

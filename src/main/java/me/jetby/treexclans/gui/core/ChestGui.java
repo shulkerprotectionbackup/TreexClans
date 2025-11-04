@@ -2,13 +2,11 @@ package me.jetby.treexclans.gui.core;
 
 import com.jodexindustries.jguiwrapper.api.item.ItemWrapper;
 import com.jodexindustries.jguiwrapper.gui.advanced.GuiItemController;
-import me.jetby.treex.text.Colorize;
-import me.jetby.treex.text.Papi;
 import me.jetby.treexclans.TreexClans;
 import me.jetby.treexclans.clan.Clan;
 import me.jetby.treexclans.gui.Button;
-import me.jetby.treexclans.gui.Menu;
 import me.jetby.treexclans.gui.Gui;
+import me.jetby.treexclans.gui.Menu;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
@@ -141,7 +139,7 @@ public class ChestGui extends Gui {
         if ("next_page".equals(type)) {
             builder.slots(button.slot());
             ItemWrapper wrapper = new ItemWrapper(button.itemStack().clone());
-            wrapper.displayName(Colorize.text(Papi.setPapi(player, button.displayName())));
+            wrapper.displayName(applyDefaultPlaceholders(button.displayName()));
             wrapper.enchanted(button.enchanted());
             builder.defaultItem(wrapper);
             builder.defaultClickHandler((e, gui) -> {
@@ -159,7 +157,7 @@ public class ChestGui extends Gui {
         if ("prev_page".equals(type)) {
             builder.slots(button.slot());
             ItemWrapper wrapper = new ItemWrapper(button.itemStack().clone());
-            wrapper.displayName(Colorize.text(Papi.setPapi(player, button.displayName())));
+            wrapper.displayName(applyDefaultPlaceholders(button.displayName()));
             wrapper.enchanted(button.enchanted());
             builder.defaultItem(wrapper);
             builder.defaultClickHandler((e, gui) -> {
@@ -171,7 +169,6 @@ public class ChestGui extends Gui {
                     Bukkit.getScheduler().runTaskLater(getPlugin(), this::loadPageFromCloudData, 1L);
                 }
             });
-            return;
         }
     }
 

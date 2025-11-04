@@ -39,16 +39,20 @@ public class AdminCommand implements CommandExecutor, TabCompleter {
     @Override
     public @Nullable List<String> onTabComplete(@NotNull CommandSender sender, @NotNull Command command, @NotNull String s, @NotNull String[] args) {
         if (!sender.hasPermission("clan.admin")) return null;
+        List<String> completions = new ArrayList<>(Arrays.stream(AdminCommandArgs.values())
+                .map(Enum::name)
+                .map(String::toLowerCase)
+                .toList());
+
         if (args.length == 1) {
-            List<String> result = new ArrayList<>();
-            for (var cmd : AdminCommandArgs.values()) result.add(cmd.name().toLowerCase());
-            return result;
+            for (var cmd : AdminCommandArgs.values()) completions.add(cmd.name().toLowerCase());
+            return completions;
         }
         try {
             var arg = AdminCommandArgs.valueOf(args[0].toUpperCase());
             return arg.getSubcommand().onTabCompleter(sender, command, s, args);
         } catch (IllegalArgumentException e) {
-            return List.of();
+            return completions;
         }
     }
 }

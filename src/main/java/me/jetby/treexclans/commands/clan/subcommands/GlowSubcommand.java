@@ -2,9 +2,9 @@ package me.jetby.treexclans.commands.clan.subcommands;
 
 import me.jetby.treexclans.TreexClans;
 import me.jetby.treexclans.api.CustomCommandApi;
-import me.jetby.treexclans.commands.Subcommand;
 import me.jetby.treexclans.clan.Clan;
 import me.jetby.treexclans.clan.Member;
+import me.jetby.treexclans.commands.Subcommand;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
@@ -17,6 +17,7 @@ import java.util.Set;
 
 public class GlowSubcommand implements Subcommand {
     private final TreexClans plugin = TreexClans.getInstance();
+
     @Override
     public boolean onCommand(@NotNull CommandSender sender, @NotNull String[] args) {
         if (sender instanceof Player player) {
@@ -35,7 +36,7 @@ public class GlowSubcommand implements Subcommand {
                 plugin.getLang().sendMessage(player, clan, "clan-glow-off");
             } else {
                 Set<Member> members = new HashSet<>(clan.getMembers());
-                if (clan.getMember(player.getUniqueId())!=clan.getLeader()) {
+                if (clan.getMember(player.getUniqueId()) != clan.getLeader()) {
                     members.add(clan.getLeader());
                 }
                 members.remove(clan.getMember(player.getUniqueId()));

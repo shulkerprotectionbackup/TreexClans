@@ -2,8 +2,8 @@ package me.jetby.treexclans.commands.clan.subcommands;
 
 import me.jetby.treexclans.TreexClans;
 import me.jetby.treexclans.api.CustomCommandApi;
-import me.jetby.treexclans.commands.Subcommand;
 import me.jetby.treexclans.clan.Clan;
+import me.jetby.treexclans.commands.Subcommand;
 import me.jetby.treexclans.configurations.Lang;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
@@ -15,6 +15,7 @@ import java.util.List;
 
 public class LeaveSubcommand implements Subcommand {
     private final TreexClans plugin = TreexClans.getInstance();
+
     @Override
     public boolean onCommand(@NotNull CommandSender sender, @NotNull String[] args) {
         if (sender instanceof Player player) {

@@ -55,6 +55,7 @@ public class Lang {
             break;
         }
     }
+
     public void sendMessage(Player player, Clan clan, String path) {
         ActionContext ctx = new ActionContext(player);
         ctx.put("clan", clan);
@@ -88,9 +89,11 @@ public class Lang {
     public String getMessage(String path) {
         return Colorize.text(config.getString(path, path));
     }
+
     public List<String> getMessageList(String path) {
         return config.getStringList(path);
     }
 
-    public record ReplaceString(String target, String replacement){}
+    public record ReplaceString(String target, String replacement) {
+    }
 }

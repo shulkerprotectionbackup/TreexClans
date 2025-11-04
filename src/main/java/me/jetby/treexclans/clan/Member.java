@@ -1,16 +1,18 @@
 package me.jetby.treexclans.clan;
 
 
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.Setter;
 import me.jetby.treexclans.clan.rank.Rank;
 import org.bukkit.Color;
-import org.jetbrains.annotations.NotNull;
 
 import java.util.Map;
 import java.util.UUID;
 
 @AllArgsConstructor
-@Getter @Setter
+@Getter
+@Setter
 public class Member {
     private UUID uuid;
     private Rank rank;
@@ -25,9 +27,10 @@ public class Member {
     private int deaths;
 
     public void addCoin(int a) {
-        coin = coin+a;
+        coin = coin + a;
     }
+
     public void takeCoin(int a) {
-        coin = coin-a;
+        coin = coin - a;
     }
 }

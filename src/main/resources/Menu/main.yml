@@ -4,9 +4,8 @@ size: 54
 open_permission: none
 open_args:
   - 'menu'
-open_commands: {}
+open_commands: { }
 
-listen: menu
 
 Items:
 

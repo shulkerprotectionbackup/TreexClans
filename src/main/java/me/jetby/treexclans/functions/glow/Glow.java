@@ -32,12 +32,12 @@ public record Glow(TreexClans plugin) implements PacketListener {
     public void addObserver(Player observer, Set<Member> targets) {
         if (!observer.isOnline()) return;
         Clan clan = plugin.getClanManager().getClanByMember(observer.getUniqueId());
-        if (clan==null) return;
+        if (clan == null) return;
         Member m = clan.getMember(observer.getUniqueId());
         observersToTargets.put(observer.getUniqueId(), new HashSet<>(targets));
         for (Member member : targets) {
             Player target = Bukkit.getPlayer(member.getUuid());
-            if (target!=null) {
+            if (target != null) {
                 Color color = m.getGlowColors().getOrDefault(target.getUniqueId(), Color.RED);
                 plugin.getServer().getScheduler().runTaskAsynchronously(plugin, () ->
                         PacketEvents.getAPI().getPlayerManager().sendPacket(observer, createPacket(target.getEntityId(), color)));
@@ -50,7 +50,7 @@ public record Glow(TreexClans plugin) implements PacketListener {
         for (Map.Entry<UUID, Set<Member>> entry : observersToTargets.entrySet()) {
             for (Member member : entry.getValue()) {
                 Player target = Bukkit.getPlayer(member.getUuid());
-                if (target!=null) {
+                if (target != null) {
                     Equipment.sendDefaultEquipment(observer, target);
                 }
             }
@@ -99,7 +99,7 @@ public record Glow(TreexClans plugin) implements PacketListener {
         if (!isTarget) return;
 
         Clan clan = plugin.getClanManager().getClanByMember(observerUUID);
-        if (clan==null) return;
+        if (clan == null) return;
         Member m = clan.getMember(observerUUID);
 
         if (type == Server.ENTITY_EQUIPMENT) {

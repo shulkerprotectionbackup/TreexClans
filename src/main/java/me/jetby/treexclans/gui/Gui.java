@@ -72,32 +72,38 @@ public abstract class Gui extends PaginatedAdvancedGui implements Listener {
     }
 
     public String applyDefaultPlaceholders(String text) {
-        if (text==null) return null;
+        if (text == null) return null;
         text = text.replace("%player_name%", player.getName());
-        text = text.replace("%clan_tag%", clan.getId());
-        if (clan.getPrefix()!=null) {
-            text = text.replace("%clan_prefix%", clan.getPrefix());
-        } else {
-            text = text.replace("%clan_prefix%", clan.getId().toUpperCase());
+        if (clan!=null) {
+            text = text.replace("%clan_tag%", clan.getId());
+            if (clan.getPrefix() != null) {
+                text = text.replace("%clan_prefix%", clan.getPrefix());
+            } else {
+                text = text.replace("%clan_prefix%", clan.getId().toUpperCase());
+            }
+            Player leader = Bukkit.getPlayer(clan.getLeader().getUuid());
+            if (leader != null) {
+                text = text.replace("%clan_leader_name%", leader.getName());
+            } else {
+                OfflinePlayer offlineLeader = Bukkit.getOfflinePlayer(clan.getLeader().getUuid());
+                text = text.replace("%clan_leader_name%", offlineLeader.getName());
+            }
+            text = text.replace("%clan_exp%", String.valueOf(clan.getExp()));
+            text = text.replace("%clan_exp_max%", String.valueOf(clan.getLevel().minExp()));
+            text = text.replace("%clan_level%", clan.getLevel().id());
+            text = text.replace("%clan_balance%", String.valueOf(clan.getBalance()));
+            if (getClan().getMember(player.getUniqueId())!=null) {
+                text = text.replace("%clan_coin%", String.valueOf(getClan().getMember(player.getUniqueId()).getCoin()));
+            }
         }
-        Player leader = Bukkit.getPlayer(clan.getLeader().getUuid());
-        if (leader!=null) {
-            text = text.replace("%clan_leader_name%", leader.getName());
-        } else {
-            OfflinePlayer offlineLeader = Bukkit.getOfflinePlayer(clan.getLeader().getUuid());
-            text = text.replace("%clan_leader_name%", offlineLeader.getName());
-        }
-        text = text.replace("%clan_exp%", String.valueOf(clan.getExp()));
-        text = text.replace("%clan_exp_max%", String.valueOf(clan.getLevel().minExp()));
-        text = text.replace("%clan_level%", clan.getLevel().id());
-        text = text.replace("%clan_balance%", String.valueOf(clan.getBalance()));
-        text = text.replace("%clan_coin%", String.valueOf(getClan().getMember(player.getUniqueId()).getCoin()));
         for (Map.Entry<String, String> entry : customPlaceholders.entrySet()) {
             text = text.replace(entry.getKey(), entry.getValue());
         }
         return text;
     }
+
     private final Map<String, String> customPlaceholders = new HashMap<>();
+
     public Map<String, String> setCustomPlaceholder(String target, String replacement) {
         customPlaceholders.put(target, replacement);
         return customPlaceholders;
@@ -167,7 +173,7 @@ public abstract class Gui extends PaginatedAdvancedGui implements Listener {
                 if (!cancelRegistration(player, selectedButton)) {
 
                     registerItem(selectedButton.id() + selectedButton.slot(), builder -> {
-                        if (finalSelectedButton.slot()!=-1) {
+                        if (finalSelectedButton.slot() != -1) {
                             builder.slots(finalSelectedButton.slot());
                         }
 
@@ -274,6 +280,7 @@ public abstract class Gui extends PaginatedAdvancedGui implements Listener {
     protected boolean cancelRegistration(Player player, @Nullable Button button) {
         return false;
     }
+
     protected void onInventoryClickEvent(InventoryClickEvent e) {
         if (!(e.getWhoClicked() instanceof Player p)) return;
 

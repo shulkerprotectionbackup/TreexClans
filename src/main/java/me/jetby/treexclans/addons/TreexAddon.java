@@ -26,7 +26,7 @@ public abstract class TreexAddon {
             String author,
             String version,
             String description
-            ) {
+    ) {
         this.plugin = plugin;
         this.dataFolder = dataFolder;
         this.name = name;

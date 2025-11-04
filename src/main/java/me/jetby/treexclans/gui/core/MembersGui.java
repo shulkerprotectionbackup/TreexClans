@@ -100,7 +100,7 @@ public class MembersGui extends Gui {
     private void setupMembersPagination() {
 
         List<Button> memberButtons = getMenu().buttons().stream()
-                .filter(b -> "members".equals(b.type().toLowerCase()))
+                .filter(b -> "members".equalsIgnoreCase(b.type()))
                 .toList();
 
         List<Integer> sortedMemberSlots = memberButtons.stream().map(Button::slot).toList();

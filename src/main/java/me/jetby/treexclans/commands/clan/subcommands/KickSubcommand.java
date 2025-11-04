@@ -2,11 +2,11 @@ package me.jetby.treexclans.commands.clan.subcommands;
 
 import me.jetby.treexclans.TreexClans;
 import me.jetby.treexclans.api.CustomCommandApi;
+import me.jetby.treexclans.clan.Clan;
+import me.jetby.treexclans.clan.Member;
 import me.jetby.treexclans.clan.rank.RankPerms;
 import me.jetby.treexclans.commands.Subcommand;
 import me.jetby.treexclans.configurations.Lang;
-import me.jetby.treexclans.clan.Clan;
-import me.jetby.treexclans.clan.Member;
 import org.bukkit.Bukkit;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.command.Command;
@@ -27,7 +27,7 @@ public class KickSubcommand implements Subcommand {
 
 
         if (sender instanceof Player player) {
-            if (args.length==0) {
+            if (args.length == 0) {
                 plugin.getLang().sendMessage(player, null, "commands.kick");
                 return true;
             }
@@ -45,7 +45,7 @@ public class KickSubcommand implements Subcommand {
             String targetName = args[0];
             UUID uuid;
             Player target = Bukkit.getPlayer(targetName);
-            if (target==null) {
+            if (target == null) {
                 String string = "OfflinePlayer:" + targetName;
                 uuid = UUID.nameUUIDFromBytes(string.getBytes(StandardCharsets.UTF_8));
             } else {
@@ -53,11 +53,11 @@ public class KickSubcommand implements Subcommand {
             }
             Member member = clan.getMember(uuid);
 
-            if (member==null) {
+            if (member == null) {
                 plugin.getLang().sendMessage(player, clan, "player-not-found");
                 return true;
             }
-            if (target!=null && clan.getMember(player.getUniqueId()).equals(member)) {
+            if (target != null && clan.getMember(player.getUniqueId()).equals(member)) {
                 plugin.getLang().sendMessage(player, clan, "clan-you-cant-kick-yourself");
                 return true;
             }
@@ -68,7 +68,7 @@ public class KickSubcommand implements Subcommand {
 
             clan.removeMember(member);
             plugin.getLang().sendMessage(player, clan, "clan-player-kick", new Lang.ReplaceString("{target}", targetName));
-            if (target!=null && target.isOnline()) {
+            if (target != null && target.isOnline()) {
                 plugin.getLang().sendMessage(target, clan, "clan-you-was-kicked", new Lang.ReplaceString("{player}", player.getName()));
             }
         }
@@ -82,8 +82,9 @@ public class KickSubcommand implements Subcommand {
                 return List.of();
             }
             Clan clan = plugin.getClanManager().getClanByMember(player.getUniqueId());
-            if (args.length>0) {
-                return clan.getMembers().stream().map(member -> {
+            if (args.length > 0) {
+                return clan.getMembers().stream()
+                        .map(member -> {
                     OfflinePlayer offlinePlayer = Bukkit.getOfflinePlayer(member.getUuid());
                     return offlinePlayer.getName();
                 }).toList();

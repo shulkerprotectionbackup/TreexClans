@@ -13,7 +13,7 @@ Items:
 
   clans:
     type: clans
-    display_name: "&6#%top_num% %prefix% &8(%clan_tag%)"
+    display_name: "&6#%top_num% %prefix% &8(%tag%)"
     slot:
       - '10-17'
       - '19-25'

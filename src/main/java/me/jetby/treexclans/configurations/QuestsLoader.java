@@ -18,8 +18,10 @@ public class QuestsLoader {
     private final FileConfiguration configuration = FileLoader.getFileConfiguration("quests.yml");
 
 
-    @Getter private final Map<String, Set<Quest>> categories = new LinkedHashMap<>();
-    @Getter private final Map<String, Quest> quests = new HashMap<>();
+    @Getter
+    private final Map<String, Set<Quest>> categories = new LinkedHashMap<>();
+    @Getter
+    private final Map<String, Quest> quests = new HashMap<>();
 
     public void load() {
         quests.clear();
@@ -28,16 +30,16 @@ public class QuestsLoader {
         for (String key : configuration.getKeys(false)) {
             if (key.equals("category")) continue;
             ConfigurationSection quest = configuration.getConfigurationSection(key);
-            if (quest!=null) {
+            if (quest != null) {
                 String type = quest.getString("type");
-                if (type==null) {
-                    LOGGER.warn("Quest "+key+" has wrong type.");
+                if (type == null) {
+                    LOGGER.warn("Quest " + key + " has wrong type.");
                     continue;
                 }
                 String[] questArgs = type.split(";");
                 QuestType questType = QuestType.valueOf(questArgs[0].toUpperCase());
                 String questProperty = null;
-                if (questArgs.length==2) {
+                if (questArgs.length == 2) {
                     questProperty = questArgs[1].toUpperCase();
                 }
 
@@ -56,7 +58,7 @@ public class QuestsLoader {
         }
 
         ConfigurationSection categories = configuration.getConfigurationSection("category");
-        if (categories!=null) {
+        if (categories != null) {
             for (String key : categories.getKeys(false)) {
                 List<String> questIds = categories.getStringList(key);
                 if (questIds.isEmpty()) continue;

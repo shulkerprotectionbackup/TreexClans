@@ -1,16 +1,8 @@
 package me.jetby.treexclans.gui.requirements;
 
 import lombok.experimental.UtilityClass;
-import me.jetby.treex.actions.ActionContext;
-import me.jetby.treex.actions.ActionExecutor;
-import me.jetby.treex.actions.ActionRegistry;
 import me.jetby.treex.text.Papi;
-import me.jetby.treexclans.clan.Clan;
-import me.jetby.treexclans.gui.Button;
 import org.bukkit.entity.Player;
-
-import java.util.ArrayList;
-import java.util.List;
 
 
 @UtilityClass
@@ -19,6 +11,7 @@ public class Requirements {
     public boolean check(Player player, SimpleRequirement req) {
         return checkInternal(player, req.type(), req.permission(), req.input(), req.output());
     }
+
     public boolean check(Player player, ViewRequirement req) {
         return checkInternal(player, req.type(), req.permission(), req.input(), req.output());
     }

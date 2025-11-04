@@ -6,4 +6,5 @@ public record Rank(
         String id,
         String name,
         Set<RankPerms> perms
-) {}
+) {
+}

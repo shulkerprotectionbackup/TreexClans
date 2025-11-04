@@ -12,14 +12,11 @@ import me.jetby.treexclans.clan.Clan;
 import me.jetby.treexclans.clan.Member;
 import me.jetby.treexclans.commands.admin.AdminCommand;
 import me.jetby.treexclans.commands.clan.ClanCommand;
-import me.jetby.treexclans.configurations.Config;
-import me.jetby.treexclans.configurations.Lang;
-import me.jetby.treexclans.configurations.QuestsLoader;
+import me.jetby.treexclans.configurations.*;
 import me.jetby.treexclans.functions.glow.Glow;
 import me.jetby.treexclans.functions.quests.QuestManager;
 import me.jetby.treexclans.functions.tops.TopManager;
 import me.jetby.treexclans.gui.CommandRegistrar;
-import me.jetby.treexclans.gui.Gui;
 import me.jetby.treexclans.gui.GuiLoader;
 import me.jetby.treexclans.hooks.ClanPlaceholder;
 import me.jetby.treexclans.hooks.TreexAutoDownload;
@@ -34,16 +31,13 @@ import me.jetby.treexclans.tools.customactions.Actions;
 import net.milkbowl.vault.economy.Economy;
 import org.bukkit.Bukkit;
 import org.bukkit.NamespacedKey;
-import org.bukkit.OfflinePlayer;
 import org.bukkit.command.PluginCommand;
 import org.bukkit.entity.Player;
-import org.bukkit.event.inventory.InventoryCloseEvent;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import java.io.IOException;
 import java.util.HashSet;
 import java.util.Set;
-import java.util.UUID;
 
 @Getter
 public final class TreexClans extends JavaPlugin {
@@ -76,6 +70,8 @@ public final class TreexClans extends JavaPlugin {
     private QuestManager questManager;
     private ClanPlaceholder clanPlaceholder;
 
+    private Modules modules;
+
     private AddonManager addonManager;
 
     @Override
@@ -105,11 +101,15 @@ public final class TreexClans extends JavaPlugin {
 
         economy = new Vault().getEconomy();
 
+        new ConfigUpdater(getConfig().getInt("config-version", 1));
+
         cfg = new Config(this);
         cfg.load();
 
         formatTime = new FormatTime(this);
 
+        modules = new Modules();
+        modules.load();
 
         clanManager = new ClanManager(this);
 
@@ -161,7 +161,7 @@ public final class TreexClans extends JavaPlugin {
         }
         if (storage != null) storage.save();
         disableGlowForAll();
-        if (clanPlaceholder !=null) {
+        if (clanPlaceholder != null) {
             if (clanPlaceholder.isPapi()) {
                 clanPlaceholder.unregister();
             }

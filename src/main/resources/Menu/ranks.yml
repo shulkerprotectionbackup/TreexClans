@@ -2,7 +2,7 @@ id: ranks
 title: "&0&lРанги"
 size: 36
 open_permission: none
-open_commands: {}
+open_commands: { }
 
 listen: ranks
 
@@ -27,6 +27,7 @@ Items:
       - "&6⚐ &fВносить деньги в баланс клана %deposit_status%"
       - "&6⚐ &fСнимать деньги с баланса клана %withdraw_status%"
       - "&6⚐ &fПереключать pvp %pvp_status%"
+      - "&6⚐ &fСтавить слоган %slogan_status%"
       - "&6&m                    "
 
 

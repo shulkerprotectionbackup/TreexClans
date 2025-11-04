@@ -8,6 +8,8 @@ public enum RankPerms {
     SETRANK,
     DEPOSIT,
     WITHDRAW,
+    SETSLOGAN,
+    SETPREFIX,
     PVP
 
 }

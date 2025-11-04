@@ -38,13 +38,13 @@ public class GuiApi {
      *
      * @param guiType the GUI type (unique identifier)
      * @param factory the factory used to create GUI instances
-     * <p>
-     * Example:
-     * <pre>
-     * GuiApi.registerGui("my_custom", (plugin, menu, player, clan, args) ->
-     *     new MyCustomGui(plugin, menu, player, clan)
-     * );
-     * </pre>
+     *                <p>
+     *                Example:
+     *                <pre>
+     *                GuiApi.registerGui("my_custom", (plugin, menu, player, clan, args) ->
+     *                    new MyCustomGui(plugin, menu, player, clan)
+     *                );
+     *                </pre>
      */
     public void registerGui(@NotNull String guiType, @NotNull IGuiFactory factory) {
         if (registeredGuis.containsKey(guiType.toUpperCase())) {
@@ -88,11 +88,11 @@ public class GuiApi {
     /**
      * Creates a GUI instance by type.
      *
-     * @param guiType the GUI type
-     * @param plugin the plugin instance
-     * @param menu the menu configuration
-     * @param player the player
-     * @param clan the player's clan
+     * @param guiType       the GUI type
+     * @param plugin        the plugin instance
+     * @param menu          the menu configuration
+     * @param player        the player
+     * @param clan          the player's clan
      * @param customObjects additional objects to pass (optional)
      * @return the GUI instance, or null if the type is not registered
      */
@@ -127,10 +127,10 @@ public class GuiApi {
         /**
          * Creates a new GUI instance.
          *
-         * @param plugin the plugin instance
-         * @param menu the menu configuration
-         * @param player the player
-         * @param clan the player's clan
+         * @param plugin        the plugin instance
+         * @param menu          the menu configuration
+         * @param player        the player
+         * @param clan          the player's clan
          * @param customObjects additional objects (optional)
          * @return the new GUI instance
          */

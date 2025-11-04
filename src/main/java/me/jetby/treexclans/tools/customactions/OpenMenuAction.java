@@ -19,7 +19,7 @@ public class OpenMenuAction implements Action {
         String message = ctx.get("message", String.class);
         Clan clan = ctx.get("clan", Clan.class);
         var menu = plugin.getGuiLoader().getMenus().get(message);
-        if (menu!=null && player!=null && clan!=null) {
+        if (menu != null && player != null && clan != null) {
             Gui gui = GuiFactory.create(plugin, menu, player, clan);
             Bukkit.getScheduler().runTaskLater(plugin, () -> gui.open(player), 1L);
         }
