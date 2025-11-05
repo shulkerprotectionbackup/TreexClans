@@ -47,6 +47,7 @@ public class Config {
     private int prefixMinLength;
     private int prefixMaxLength;
     private String prefixRegex;
+    private List<String> lengthIgnoredSymbols;
 
     private String tagPlaceholder_hasClan;
     private String tagPlaceholder_noClan;
@@ -83,6 +84,7 @@ public class Config {
         prefixMinLength = prefix.getInt("min-clan-prefix-length", 3);
         prefixMaxLength = prefix.getInt("max-clan-prefix-length", 16);
         prefixRegex = prefix.getString("regex", "^[A-Za-z0-9]+$");
+        lengthIgnoredSymbols = prefix.getStringList("length-ignored-symbols");
 
         ConfigurationSection prefixPlaceholder = prefix.getConfigurationSection("placeholder");
         if (prefixPlaceholder == null) prefixPlaceholder = prefix.createSection("placeholder");

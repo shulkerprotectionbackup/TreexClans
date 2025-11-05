@@ -56,23 +56,24 @@ public class ClanCommand implements CommandExecutor, TabCompleter {
                 apiArg.onCommand(sender, Arrays.copyOfRange(args, 1, args.length));
                 return true;
             }
-
-            Clan clan = plugin.getClanManager().getClanByMember(player.getUniqueId());;
+            Clan clan = plugin.getClanManager().getClanByMember(player.getUniqueId());
 
             for (Map.Entry<String, List<String>> entry : menuArgs.entrySet()) {
                 if (entry.getValue().contains(args[0])) {
                     Menu menu = plugin.getGuiLoader().getMenus().get(entry.getKey());
                     GuiType type = isBuiltInGuiType(menu.type()) ? GuiType.valueOf(menu.type()) : null;
 
-                    if (type == GuiType.DEFAULT || type == GuiType.TOP_CLANS) {
-                        Gui gui = GuiFactory.create(plugin, menu, player, clan);
-                        gui.open(player);
-                        return true;
+                    if (!plugin.getClanManager().isInClan(player.getUniqueId())) {
+                        if (type != GuiType.DEFAULT && type != GuiType.TOP_CLANS) {
+                            return true;
+                        }
                     }
+                    Gui gui = GuiFactory.create(plugin, menu, player, clan);
+                    gui.open(player);
+                    return true;
+
                 }
             }
-
-
         }
 
         if (args[0].equalsIgnoreCase("glow")) {
@@ -109,11 +110,12 @@ public class ClanCommand implements CommandExecutor, TabCompleter {
                     .map(String::toLowerCase)
                     .collect(Collectors.toList());
 
-            completions.removeIf(cmd -> switch (cmd) {
-                case "glow" -> !plugin.getModules().isGlow();
-                case "setslogan" -> !plugin.getModules().isSlogan();
-                default -> false;
-            });
+            completions.removeIf(cmd ->
+                    switch (cmd) {
+                        case "glow" -> !plugin.getModules().isGlow();
+                        case "setslogan" -> !plugin.getModules().isSlogan();
+                        default -> false;
+                    });
 
             for (Map.Entry<String, List<String>> entry : menuArgs.entrySet()) {
                 Menu menu = plugin.getGuiLoader().getMenus().get(entry.getKey());

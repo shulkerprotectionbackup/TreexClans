@@ -50,8 +50,7 @@ public class ClanPlaceholder extends PlaceholderExpansion {
             }
             case "prefix" -> {
                 if (!plugin.getClanManager().isInClan(player.getUniqueId()))
-                    yield plugin.getCfg().getPrefixPlaceholder_noClan()
-                            .replace("{tag}", clan.getId());
+                    yield plugin.getCfg().getPrefixPlaceholder_noClan();
                 if (clan.getPrefix() == null) yield plugin.getCfg().getPrefixPlaceholder_noPrefix()
                         .replace("{tag}", clan.getId());
 

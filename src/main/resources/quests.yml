@@ -12,6 +12,13 @@ category:
     - quest10
 
 
+# Все типы:
+# PLAYER_KILL
+# ENTITY_KILL;ID
+# BLOCK_BREAK;ID
+# BLOCK_PLACE;ID
+# CHAT
+#
 quest1:
   type: ENTITY_KILL;ZOMBIE
   target: 50

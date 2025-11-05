@@ -154,17 +154,21 @@ public record ClanManager(TreexClans plugin) implements Listener {
         }
         return true;
     }
-
     public boolean isAllowedPrefix(Player player, String prefix) {
+        String cleanedPrefix = removeIgnoredSymbols(prefix, plugin.getCfg().getLengthIgnoredSymbols());
 
-        if (prefix.length() < plugin.getCfg().getPrefixMinLength()) {
+        int min = plugin.getCfg().getPrefixMinLength();
+        int max = plugin.getCfg().getPrefixMaxLength();
+
+        if (cleanedPrefix.length() < min) {
             plugin.getLang().sendMessage(player, null, "clan-prefix-too-short",
-                    new Lang.ReplaceString("{min_length}", String.valueOf(plugin.getCfg().getPrefixMinLength())));
+                    new Lang.ReplaceString("{min_length}", String.valueOf(min)));
             return false;
         }
-        if (prefix.length() > plugin.getCfg().getPrefixMaxLength()) {
+
+        if (cleanedPrefix.length() > max) {
             plugin.getLang().sendMessage(player, null, "clan-prefix-too-long",
-                    new Lang.ReplaceString("{max_length}", String.valueOf(plugin.getCfg().getPrefixMaxLength())));
+                    new Lang.ReplaceString("{max_length}", String.valueOf(max)));
             return false;
         }
 
@@ -180,6 +184,17 @@ public record ClanManager(TreexClans plugin) implements Listener {
 
         return true;
     }
+
+    private String removeIgnoredSymbols(String input, List<String> ignored) {
+        String result = input;
+        for (String ignore : ignored) {
+            if (ignore != null && !ignore.isEmpty()) {
+                result = result.replace(ignore, "");
+            }
+        }
+        return result;
+    }
+
 
     public boolean isAllowedRegex(String text, String regex) {
         return text != null && text.matches(regex);

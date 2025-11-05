@@ -7,6 +7,7 @@ import org.bukkit.configuration.file.YamlConfiguration;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.List;
 
 public class ConfigUpdater {
 
@@ -17,10 +18,17 @@ public class ConfigUpdater {
         this.configuration = YamlConfiguration.loadConfiguration(file);
         switch (version) {
             case 1 -> loadV1();
+            case 2 -> loadV2();
         }
     }
 
-
+    public void loadV2() {
+        try {
+            configuration.set("config-version", 3);
+            configuration.set("prefix.length-ignored-symbols", List.of("&", "#"));
+            configuration.save(file);
+        } catch (IOException ignored) {}
+    }
     public void loadV1() {
         try {
 
@@ -43,8 +51,6 @@ public class ConfigUpdater {
             configuration.set("tag-placeholder.no_clan", "");
 
             configuration.save(file);
-        } catch (IOException e) {
-
-        }
+        } catch (IOException ignored) {}
     }
 }
