@@ -100,7 +100,10 @@ public class ChestGui extends Gui {
                 if (globalIndex >= maxChestSlots) {
                     consumers[i] = builder -> {
                         builder.slots(guiSlot);
-                        ItemWrapper barrier = new ItemWrapper(blockedSlot.itemStack());
+                        ItemWrapper barrier = ItemWrapper.builder(blockedSlot.itemStack().getType())
+                                .displayName(Colorize.text(blockedSlot.displayName(), true))
+                                .lore(Colorize.list(blockedSlot.lore(), true))
+                                .build();
                         barrier.displayName(Colorize.text(blockedSlot.displayName(), true));
                         barrier.lore(Colorize.list(blockedSlot.lore(), true));
 
