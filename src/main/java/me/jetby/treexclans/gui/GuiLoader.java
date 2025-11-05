@@ -145,8 +145,8 @@ public class GuiLoader {
                     if (meta != null) {
                         if (hideAttributes) meta.addItemFlags(ItemFlag.HIDE_ATTRIBUTES);
                         meta.addItemFlags(ItemFlag.HIDE_DYE);
-                        meta.setDisplayName(Colorize.text(displayName));
-                        meta.setLore(Colorize.list(lore));
+                        meta.setDisplayName(displayName);
+                        meta.setLore(lore);
                         meta.setCustomModelData(customModelData);
                         if (meta instanceof LeatherArmorMeta lam) {
                             lam.setColor(Equipment.getColorByName(rgb));

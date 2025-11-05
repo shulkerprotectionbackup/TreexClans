@@ -1,6 +1,7 @@
 package me.jetby.treexclans.gui;
 
 import com.jodexindustries.jguiwrapper.api.item.ItemWrapper;
+import com.jodexindustries.jguiwrapper.api.text.SerializerType;
 import com.jodexindustries.jguiwrapper.gui.advanced.GuiItemController;
 import com.jodexindustries.jguiwrapper.gui.advanced.PaginatedAdvancedGui;
 import lombok.Getter;
@@ -54,6 +55,7 @@ public abstract class Gui extends PaginatedAdvancedGui implements Listener {
         this.inventory = holder().getInventory();
         this.clan = clan;
         this.plugin = plugin;
+        defaultSerializer = SerializerType.PLAIN;
         Bukkit.getServer().getPluginManager().registerEvents(this, plugin);
 
 
@@ -99,6 +101,7 @@ public abstract class Gui extends PaginatedAdvancedGui implements Listener {
         for (Map.Entry<String, String> entry : customPlaceholders.entrySet()) {
             text = text.replace(entry.getKey(), entry.getValue());
         }
+        text = Colorize.text(text, true);
         return text;
     }
 

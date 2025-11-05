@@ -45,6 +45,27 @@ public class QuestsGui extends Gui {
     }
 
     @Override
+    protected void onRegister(Player player, Button button, GuiItemController.Builder builder) {
+        if (button == null) return;
+        switch (button.type().toLowerCase()) {
+            case "next_page": {
+                builder.defaultClickHandler((e, gui) -> {
+                    e.setCancelled(true);
+                    nextPage();
+                });
+                break;
+            }
+            case "prev_page": {
+                builder.defaultClickHandler((e, gui) -> {
+                    e.setCancelled(true);
+                    previousPage();
+                });
+                break;
+            }
+        }
+    }
+
+    @Override
     public boolean cancelRegistration(Player player, @Nullable Button button) {
         if (button != null) {
             return button.type().equals("all_quests") || button.type().startsWith("category-");

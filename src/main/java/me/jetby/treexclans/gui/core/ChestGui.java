@@ -2,6 +2,7 @@ package me.jetby.treexclans.gui.core;
 
 import com.jodexindustries.jguiwrapper.api.item.ItemWrapper;
 import com.jodexindustries.jguiwrapper.gui.advanced.GuiItemController;
+import me.jetby.treex.text.Colorize;
 import me.jetby.treexclans.TreexClans;
 import me.jetby.treexclans.clan.Clan;
 import me.jetby.treexclans.gui.Button;
@@ -100,6 +101,8 @@ public class ChestGui extends Gui {
                     consumers[i] = builder -> {
                         builder.slots(guiSlot);
                         ItemWrapper barrier = new ItemWrapper(blockedSlot.itemStack());
+                        barrier.displayName(Colorize.text(blockedSlot.displayName(), true));
+                        barrier.lore(Colorize.list(blockedSlot.lore(), true));
 
                         ItemMeta meta = barrier.itemStack().getItemMeta();
                         if (meta != null) {
@@ -137,11 +140,6 @@ public class ChestGui extends Gui {
         }
 
         if ("next_page".equals(type)) {
-            builder.slots(button.slot());
-            ItemWrapper wrapper = new ItemWrapper(button.itemStack().clone());
-            wrapper.displayName(applyDefaultPlaceholders(button.displayName()));
-            wrapper.enchanted(button.enchanted());
-            builder.defaultItem(wrapper);
             builder.defaultClickHandler((e, gui) -> {
                 e.setCancelled(true);
                 if (currentPage < getTotalPages() - 1) {
@@ -155,11 +153,6 @@ public class ChestGui extends Gui {
         }
 
         if ("prev_page".equals(type)) {
-            builder.slots(button.slot());
-            ItemWrapper wrapper = new ItemWrapper(button.itemStack().clone());
-            wrapper.displayName(applyDefaultPlaceholders(button.displayName()));
-            wrapper.enchanted(button.enchanted());
-            builder.defaultItem(wrapper);
             builder.defaultClickHandler((e, gui) -> {
                 e.setCancelled(true);
                 if (currentPage > 0) {
