@@ -439,7 +439,7 @@ public class ExampleAddon extends TreexAddon implements Listener {
 
     @Override
     public void onEnable() {
-        // Load config
+        // Load config yaml
         config = getConfig();
         saveConfig();
         
