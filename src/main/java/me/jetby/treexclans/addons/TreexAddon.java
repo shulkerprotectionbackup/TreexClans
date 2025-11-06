@@ -2,48 +2,49 @@ package me.jetby.treexclans.addons;
 
 import lombok.Getter;
 import me.jetby.treexclans.TreexClans;
+import me.jetby.treexclans.addons.annotations.TreexAddonInfo;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.jetbrains.annotations.NotNull;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.logging.Logger;
 
 @Getter
 public abstract class TreexAddon {
 
+    private TreexAddonInfo info;
     protected TreexClans plugin;
     protected File dataFolder;
-    protected String name;
-    protected String author;
-    protected String version;
-    protected String description;
+    private Logger logger;
 
-    public final void initialize(
-            @NotNull TreexClans plugin,
-            @NotNull File dataFolder,
-            String name,
-            String author,
-            String version,
-            String description
-    ) {
-        this.plugin = plugin;
-        this.dataFolder = dataFolder;
-        this.name = name;
-        this.author = author;
-        this.version = version;
-        this.description = description;
+    public final void initialize(@NotNull AddonContext context) {
+        this.info = getClass().getAnnotation(TreexAddonInfo.class);
+        this.plugin = context.plugin();
+        if (info == null)
+            throw new IllegalStateException("Класс " + getClass().getName() + " не имеет аннотации @TreexAddonInfo");
 
-        if (!this.dataFolder.exists()) {
-            this.dataFolder.mkdirs();
-        }
+        Logger parent = plugin.getLogger();
+        this.logger = new Logger("AddonLogger-" + info.id(), null) {
+            @Override
+            public void log(java.util.logging.Level level, String msg) {
+                String prefix = "[" + info.id() + "] ";
+                parent.log(level, prefix + msg);
+            }
+
+            @Override
+            public void log(java.util.logging.Level level, String msg, Throwable thrown) {
+                String prefix = "[" + info.id() + "] ";
+                parent.log(level, prefix + msg, thrown);
+            }
+        };
+        this.dataFolder = new File(context.plugin().getDataFolder(), "addons/" + info.id());
+        if (!dataFolder.exists()) dataFolder.mkdirs();
     }
 
     public abstract void onEnable();
-
-
     public abstract void onDisable();
-
 
     public TreexClans getClansPlugin() {
         return plugin;
@@ -63,7 +64,6 @@ public abstract class TreexAddon {
 
         return YamlConfiguration.loadConfiguration(configFile);
     }
-
 
     public void saveConfig() {
         File configFile = new File(dataFolder, "config.yml");
