@@ -86,7 +86,7 @@ public class GuiLoader {
         try {
             FileConfiguration config = YamlConfiguration.loadConfiguration(file);
 
-            String title = Colorize.text(config.getString("title"), true);
+            String title = config.getString("title");
             String type = config.getString("listen", "default").toUpperCase();
             int size = config.getInt("size", 27);
             String permission = config.getString("open_permission");

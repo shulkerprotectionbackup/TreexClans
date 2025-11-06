@@ -91,7 +91,7 @@
         <dependency>
             <groupId>com.github.MrJetby</groupId>
             <artifactId>Treex</artifactId>
-            <version>c8fa15cd</version>
+            <version>68c61c48</version>
             <scope>provided</scope>
         </dependency>
         <dependency>

@@ -8,6 +8,7 @@ import lombok.Getter;
 import me.jetby.treex.actions.ActionContext;
 import me.jetby.treex.actions.ActionExecutor;
 import me.jetby.treex.actions.ActionRegistry;
+import me.jetby.treex.text.BetterColorize;
 import me.jetby.treex.text.Colorize;
 import me.jetby.treex.text.Papi;
 import me.jetby.treexclans.TreexClans;
@@ -76,7 +77,7 @@ public abstract class Gui extends PaginatedAdvancedGui implements Listener {
     public String applyDefaultPlaceholders(String text) {
         if (text == null) return null;
         text = text.replace("%player_name%", player.getName());
-        if (clan!=null) {
+        if (clan != null) {
             text = text.replace("%clan_tag%", clan.getId());
             if (clan.getPrefix() != null) {
                 text = text.replace("%clan_prefix%", clan.getPrefix());
@@ -94,14 +95,13 @@ public abstract class Gui extends PaginatedAdvancedGui implements Listener {
             text = text.replace("%clan_exp_max%", String.valueOf(clan.getLevel().minExp()));
             text = text.replace("%clan_level%", clan.getLevel().id());
             text = text.replace("%clan_balance%", String.valueOf(clan.getBalance()));
-            if (getClan().getMember(player.getUniqueId())!=null) {
+            if (getClan().getMember(player.getUniqueId()) != null) {
                 text = text.replace("%clan_coin%", String.valueOf(getClan().getMember(player.getUniqueId()).getCoin()));
             }
         }
         for (Map.Entry<String, String> entry : customPlaceholders.entrySet()) {
             text = text.replace(entry.getKey(), entry.getValue());
         }
-        text = Colorize.text(text, true);
         return text;
     }
 
@@ -203,13 +203,12 @@ public abstract class Gui extends PaginatedAdvancedGui implements Listener {
                         ItemStack itemStack = finalSelectedButton.itemStack().clone();
                         ItemWrapper wrapper = new ItemWrapper(itemStack);
 
-                        wrapper.displayName(Papi.setPapi(player, applyDefaultPlaceholders(finalSelectedButton.displayName())));
+                        wrapper.displayName(BetterColorize.component(Papi.setPapi(player, applyDefaultPlaceholders(finalSelectedButton.displayName()))));
                         List<String> processedLore = finalSelectedButton.lore().stream()
                                 .map(this::applyDefaultPlaceholders)
                                 .map(l -> Papi.setPapi(player, l))
-                                .map(Colorize::text)
-                                .collect(Collectors.toList());
-                        wrapper.lore(processedLore);
+                                .toList();
+                        wrapper.lore(BetterColorize.component(processedLore));
                         wrapper.customModelData(finalSelectedButton.customModelData());
                         wrapper.enchanted(finalSelectedButton.enchanted());
                         wrapper.update();
