@@ -157,7 +157,7 @@ public final class TreexClans extends JavaPlugin {
     @Override
     public void onDisable() {
         if (addonManager != null) {
-            addonManager.unloadAllAddons();
+            addonManager.unloadAll();
         }
         if (storage != null) storage.save();
         disableGlowForAll();
