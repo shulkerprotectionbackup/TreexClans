@@ -2,34 +2,35 @@ package me.jetby.treexclans.addons;
 
 import lombok.Getter;
 import me.jetby.treexclans.TreexClans;
-import org.bukkit.configuration.file.YamlConfiguration;
+import me.jetby.treexclans.addons.annotations.Dependency;
+import me.jetby.treexclans.addons.annotations.TreexAddonInfo;
+import me.jetby.treexclans.addons.util.VersionUtil;
+import org.jetbrains.annotations.NotNull;
 
 import java.io.File;
 import java.io.IOException;
-import java.io.InputStream;
 import java.net.URL;
 import java.net.URLClassLoader;
-import java.nio.file.Files;
-import java.nio.file.StandardCopyOption;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.jar.JarEntry;
+import java.util.*;
 import java.util.jar.JarFile;
+import java.util.logging.Logger;
+import java.util.stream.Collectors;
 
 import static me.jetby.treexclans.TreexClans.LOGGER;
 
-public class AddonManager {
+public final class AddonManager {
 
     private final TreexClans plugin;
     private final File addonsFolder;
+    private final Logger logger;
+
     @Getter
-    private final Map<String, TreexAddon> loadedAddons = new HashMap<>();
+    private final Map<String, TreexAddon> loadedAddons = new LinkedHashMap<>();
     private final Map<String, URLClassLoader> classLoaders = new HashMap<>();
 
-    public AddonManager(TreexClans plugin) {
+    public AddonManager(@NotNull TreexClans plugin) {
         this.plugin = plugin;
+        this.logger = plugin.getLogger();
         this.addonsFolder = new File(plugin.getDataFolder(), "addons");
 
         if (!addonsFolder.exists()) {
@@ -38,206 +39,213 @@ public class AddonManager {
         }
     }
 
+    /**
+     * Загружает все JAR-аддоны из папки /addons.
+     */
     public void loadAddons() {
-        if (!addonsFolder.exists() || !addonsFolder.isDirectory()) {
-            LOGGER.warn("Addons folder not found!");
-            return;
-        }
-
-        File[] jarFiles = addonsFolder.listFiles((dir, name) -> name.endsWith(".jar"));
-
-        if (jarFiles == null || jarFiles.length == 0) {
-            LOGGER.info("No addons found in addons folder");
+        File[] jars = addonsFolder.listFiles((dir, name) -> name.endsWith(".jar"));
+        if (jars == null || jars.length == 0) {
+            LOGGER.info("No addons found in " + addonsFolder.getAbsolutePath());
             return;
         }
 
         LOGGER.success("------------------------");
-        LOGGER.info("Loading " + jarFiles.length + " addon(s)...");
+        LOGGER.info("Scanning " + jars.length + " addon(s) in folder: " + addonsFolder.getAbsolutePath());
         LOGGER.success("------------------------");
 
-        for (File jarFile : jarFiles) {
+        for (File jarFile : jars) {
+            LOGGER.info("→ Found addon file: " + jarFile.getName() + " (" + jarFile.length() + " bytes)");
             try {
-                loadAddon(jarFile);
-            } catch (Exception e) {
-                LOGGER.error("Failed to load addon: " + jarFile.getName());
+                loadFromJar(jarFile);
+            } catch (Throwable e) {
+                LOGGER.error("❌ Failed to load addon from " + jarFile.getName() + ": " + e.getClass().getSimpleName() + " — " + e.getMessage());
                 e.printStackTrace();
             }
         }
+
+        enableAll();
 
         LOGGER.success("------------------------");
         LOGGER.success(loadedAddons.size() + " addon(s) loaded successfully!");
         LOGGER.success("------------------------");
     }
 
-    private void loadAddon(File jarFile) throws Exception {
-        String jarName = jarFile.getName();
-        String addonName = extractAddonName(jarName);
+    /**
+     * Загружает один JAR и ищет аннотированный класс TreexAddonInfo.
+     */
+    private void loadFromJar(File jarFile) throws Exception {
+        LOGGER.info("↳ Opening JAR: " + jarFile.getName());
 
-        File configFolder = new File(addonsFolder, addonName);
-        if (!configFolder.exists()) {
-            configFolder.mkdirs();
-        }
-
-        File addonYamlFile = new File(configFolder, "addon.yml");
-
-        try (JarFile jar = new JarFile(jarFile)) {
-            JarEntry yamlEntry = jar.getJarEntry("addon.yml");
-            if (yamlEntry != null) {
-                try (InputStream input = jar.getInputStream(yamlEntry)) {
-                    Files.copy(input, addonYamlFile.toPath(), StandardCopyOption.REPLACE_EXISTING);
-                }
-                LOGGER.info("Extracted addon.yml from JAR: " + jarName);
-            } else {
-                if (!addonYamlFile.exists()) {
-                    createDefaultAddonYaml(addonYamlFile, addonName, jarName);
-                }
-            }
-        } catch (Exception e) {
-            LOGGER.warn("Failed to check/extract addon.yml from JAR: " + jarName + " - " + e.getMessage());
-
-            if (!addonYamlFile.exists()) {
-                createDefaultAddonYaml(addonYamlFile, addonName, jarName);
-            }
-        }
-
-        YamlConfiguration addonYaml = YamlConfiguration.loadConfiguration(addonYamlFile);
-
-        String mainClassName = addonYaml.getString("main");
-        if (mainClassName == null || mainClassName.isEmpty()) {
-            LOGGER.warn("No main class specified in " + addonName + "/addon.yml");
-            return;
-        }
-
-        URLClassLoader classLoader = new URLClassLoader(
+        URLClassLoader loader = new URLClassLoader(
                 new URL[]{jarFile.toURI().toURL()},
                 plugin.getClass().getClassLoader()
         );
 
-        classLoaders.put(addonName, classLoader);
+        classLoaders.put(jarFile.getName(), loader);
 
-        try {
-            Class<?> mainClass = classLoader.loadClass(mainClassName);
+        List<Class<?>> classes;
+        try (JarFile jar = new JarFile(jarFile)) {
+            classes = jar.stream()
+                    .filter(e -> e.getName().endsWith(".class"))
+                    .map(e -> e.getName().replace('/', '.').replace(".class", ""))
+                    .map(name -> {
+                        try {
+                            Class<?> c = loader.loadClass(name);
+                            LOGGER.info("  ↳ Loaded class: " + name);
+                            return c;
+                        } catch (Throwable t) {
+                            LOGGER.warn("  ⚠️  Failed to load class " + name + " (" + t.getClass().getSimpleName() + ": " + t.getMessage() + ")");
+                            return null;
+                        }
+                    })
+                    .filter(Objects::nonNull)
+                    .collect(Collectors.toList());
+        }
 
-            Class<?> treexAddonClass = TreexAddon.class;
+        LOGGER.info("↳ Total classes scanned: " + classes.size());
 
-            if (!treexAddonClass.isAssignableFrom(mainClass)) {
-                LOGGER.warn("Main class " + mainClassName + " does not extend TreexAddon!");
-                classLoader.close();
-                classLoaders.remove(addonName);
-                return;
+        boolean foundAny = false;
+        for (Class<?> clazz : classes) {
+            TreexAddonInfo meta = clazz.getAnnotation(TreexAddonInfo.class);
+            if (meta == null) {
+                LOGGER.info("  ⤷ Skipping " + clazz.getName() + " (no @TreexAddonInfo)");
+                continue;
             }
 
-            TreexAddon addon = (TreexAddon) mainClass.getDeclaredConstructor().newInstance();
-            addon.initialize(plugin, configFolder,
-                    addonYaml.getString("name", "Untitled"),
-                    addonYaml.getString("author", "Unknown"),
-                    addonYaml.getString("version", "1.0"),
-                    addonYaml.getString("description", "")
-            );
-            addon.onEnable();
+            foundAny = true;
+            LOGGER.success("  ⤷ Found addon class: " + clazz.getName());
+            LOGGER.success("     ↳ id=" + meta.id() + ", version=" + meta.version());
 
-            loadedAddons.put(addon.getName(), addon);
-            LOGGER.success("Addon loaded: " + addon.getName() + " v" + addon.getVersion() + " by " + addon.getAuthor());
+            if (!TreexAddon.class.isAssignableFrom(clazz)) {
+                LOGGER.warn("  ⚠️  Class " + clazz.getName() + " has @TreexAddonInfo but does not extend TreexAddon!");
+                continue;
+            }
 
-        } catch (ClassNotFoundException e) {
-            LOGGER.error("Main class not found: " + mainClassName);
-            classLoader.close();
-            classLoaders.remove(addonName);
-        } catch (Exception e) {
-            LOGGER.error("Error loading addon: " + addonName);
-            e.printStackTrace();
-            classLoader.close();
-            classLoaders.remove(addonName);
+            TreexAddon addon = (TreexAddon) clazz.getDeclaredConstructor().newInstance();
+            addon.initialize(new AddonContext(plugin, logger, addonsFolder, loadedAddons::get));
+
+            loadedAddons.put(meta.id(), addon);
+            LOGGER.success("✅ Registered addon: " + meta.id() + " v" + meta.version());
+        }
+
+        if (!foundAny) {
+            LOGGER.warn("⚠️  No classes with @TreexAddonInfo found in " + jarFile.getName());
         }
     }
 
-    private void createDefaultAddonYaml(File addonYamlFile, String addonName, String jarName) {
-        try {
-            addonYamlFile.createNewFile();
+    private void enableAll() {
+        List<TreexAddon> ordered = sortByDependencies();
+        LOGGER.info("↳ Enabling addons in dependency order (" + ordered.size() + " total)");
 
-            YamlConfiguration config = new YamlConfiguration();
-            config.set("main", "com.example." + addonName.toLowerCase() + "." + addonName);
-            config.set("name", addonName);
-            config.set("version", extractVersion(jarName));
-            config.set("author", "Unknown");
-            config.set("description", "");
+        for (TreexAddon addon : ordered) {
+            TreexAddonInfo info = addon.getInfo();
 
-            config.save(addonYamlFile);
+            if (!checkDependencies(info)) {
+                LOGGER.error("⛔ Skipping " + info.id() + " — missing or incompatible dependencies.");
+                continue;
+            }
 
-            LOGGER.info("Created default addon.yml for: " + addonName);
-        } catch (IOException e) {
-            LOGGER.error("Failed to create addon.yml: " + addonName);
-            e.printStackTrace();
-        }
-    }
-
-    private String extractAddonName(String jarName) {
-        String name = jarName.replace(".jar", "");
-
-        int versionIndex = -1;
-        for (int i = 0; i < name.length(); i++) {
-            if (name.charAt(i) == '-' && i + 1 < name.length() && Character.isDigit(name.charAt(i + 1))) {
-                versionIndex = i;
-                break;
+            try {
+                addon.onEnable();
+                LOGGER.success("✅ Enabled addon: " + info.id() + " v" + info.version());
+            } catch (Throwable e) {
+                LOGGER.error("❌ Exception while enabling " + info.id() + ": " + e.getMessage());
+                e.printStackTrace();
             }
         }
-
-        if (versionIndex != -1) {
-            return name.substring(0, versionIndex);
-        }
-
-        return name;
     }
 
-    private String extractVersion(String jarName) {
-        String name = jarName.replace(".jar", "");
+    public void unloadAll() {
+        LOGGER.info("↳ Unloading all addons (" + loadedAddons.size() + ")");
+        List<TreexAddon> reversed = new ArrayList<>(loadedAddons.values());
+        Collections.reverse(reversed);
 
-        int versionIndex = -1;
-        for (int i = 0; i < name.length(); i++) {
-            if (name.charAt(i) == '-' && i + 1 < name.length() && Character.isDigit(name.charAt(i + 1))) {
-                versionIndex = i;
-                break;
-            }
-        }
-
-        if (versionIndex != -1) {
-            return name.substring(versionIndex + 1);
-        }
-
-        return "1.0";
-    }
-
-    public void unloadAllAddons() {
-        for (TreexAddon addon : loadedAddons.values()) {
+        for (TreexAddon addon : reversed) {
             try {
                 addon.onDisable();
-                LOGGER.info("Addon disabled: " + addon.getName());
-            } catch (Exception e) {
-                LOGGER.error("Error disabling addon: " + addon.getName());
-                e.printStackTrace();
+                LOGGER.info("🟡 Disabled addon: " + addon.getInfo().id());
+            } catch (Throwable e) {
+                LOGGER.error("❌ Error disabling " + addon.getInfo().id() + ": " + e.getMessage());
             }
         }
-        loadedAddons.clear();
 
-        for (URLClassLoader classLoader : classLoaders.values()) {
+        loadedAddons.clear();
+        for (Map.Entry<String, URLClassLoader> entry : classLoaders.entrySet()) {
             try {
-                classLoader.close();
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
+                entry.getValue().close();
+                LOGGER.info("Closed classloader for " + entry.getKey());
+            } catch (IOException ignored) {}
         }
         classLoaders.clear();
     }
 
-    public TreexAddon getAddon(String name) {
-        return loadedAddons.get(name);
+    private boolean checkDependencies(TreexAddonInfo info) {
+        boolean ok = true;
+        for (Dependency dep : info.depends()) {
+            TreexAddon found = loadedAddons.get(dep.id());
+            if (found == null) {
+                LOGGER.error("❌ Missing dependency for " + info.id() + ": " + dep.id() + " (required ≥ " + dep.version() + ")");
+                ok = false;
+                continue;
+            }
+
+            String actual = found.getInfo().version();
+            if (!VersionUtil.isSatisfied(actual, dep.version())) {
+                LOGGER.error("❌ Incompatible dependency for " + info.id() + ": "
+                        + dep.id() + " (required ≥ " + dep.version() + ", found " + actual + ")");
+                ok = false;
+            }
+        }
+        return ok;
     }
 
-    public boolean isAddonLoaded(String name) {
-        return loadedAddons.containsKey(name);
+    private List<TreexAddon> sortByDependencies() {
+        Map<String, Set<String>> graph = new HashMap<>();
+        for (TreexAddon a : loadedAddons.values())
+            graph.put(a.getInfo().id(), new LinkedHashSet<>());
+
+        for (TreexAddon a : loadedAddons.values()) {
+            TreexAddonInfo info = a.getInfo();
+
+            for (Dependency d : info.depends())
+                if (graph.containsKey(d.id())) graph.get(info.id()).add(d.id());
+
+            for (Dependency d : info.softDepends())
+                if (graph.containsKey(d.id())) graph.get(info.id()).add(d.id());
+
+            for (String after : info.loadAfter())
+                if (graph.containsKey(after)) graph.get(info.id()).add(after);
+
+            for (String before : info.loadBefore())
+                if (graph.containsKey(before)) graph.get(before).add(info.id());
+        }
+
+        LOGGER.info("↳ Built dependency graph: " + graph);
+        return topologicalSort(graph);
     }
 
-    public List<TreexAddon> getLoadedAddons() {
-        return new ArrayList<>(loadedAddons.values());
+    private List<TreexAddon> topologicalSort(Map<String, Set<String>> graph) {
+        Map<String, Integer> indeg = new HashMap<>();
+        for (String k : graph.keySet()) indeg.put(k, 0);
+        for (Set<String> v : graph.values())
+            for (String d : v) indeg.put(d, indeg.getOrDefault(d, 0) + 1);
+
+        Deque<String> q = new ArrayDeque<>();
+        indeg.forEach((k, v) -> { if (v == 0) q.add(k); });
+
+        List<TreexAddon> result = new ArrayList<>();
+        while (!q.isEmpty()) {
+            String id = q.removeFirst();
+            TreexAddon addon = loadedAddons.get(id);
+            if (addon != null) result.add(addon);
+
+            for (String to : graph.getOrDefault(id, Collections.emptySet())) {
+                indeg.put(to, indeg.get(to) - 1);
+                if (indeg.get(to) == 0) q.addLast(to);
+            }
+        }
+
+        LOGGER.info("↳ Topological order: " + result.stream().map(a -> a.getInfo().id()).toList());
+        return result;
     }
 }
