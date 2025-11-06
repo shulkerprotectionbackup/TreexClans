@@ -1,22 +1,14 @@
 package me.jetby.treexclans.gui.requirements;
 
 import lombok.experimental.UtilityClass;
+import me.clip.placeholderapi.PlaceholderAPI;
 import me.jetby.treex.text.Papi;
 import org.bukkit.entity.Player;
-
 
 @UtilityClass
 public class Requirements {
 
-    public boolean check(Player player, SimpleRequirement req) {
-        return checkInternal(player, req.type(), req.permission(), req.input(), req.output());
-    }
-
-    public boolean check(Player player, ViewRequirement req) {
-        return checkInternal(player, req.type(), req.permission(), req.input(), req.output());
-    }
-
-    public boolean check(Player player, ClickRequirement req) {
+    public boolean check(Player player, Requirement req) {
         return checkInternal(player, req.type(), req.permission(), req.input(), req.output());
     }
 
@@ -25,14 +17,21 @@ public class Requirements {
                                   String permission,
                                   String input,
                                   String output) {
+        var parsedInput = setPlaceholders(player, input);
+        var parsedOutput = setPlaceholders(player, output);
+
         return switch (type.toLowerCase()) {
             case "has permission" -> player.hasPermission(permission);
             case "!has permission" -> !player.hasPermission(permission);
-            case "string equals" -> input.equalsIgnoreCase(output);
-            case "!string equals" -> !input.equalsIgnoreCase(output);
+            case "string equals" -> parsedInput.equalsIgnoreCase(parsedOutput);
+            case "!string equals" -> !parsedInput.equalsIgnoreCase(parsedOutput);
             case "javascript", "math" -> evalJavascriptLike(player, input);
             default -> false;
         };
+    }
+
+    private String setPlaceholders(Player player, String input) {
+        return PlaceholderAPI.setPlaceholders(player, input);
     }
 
     private boolean evalJavascriptLike(Player player, String input) {
