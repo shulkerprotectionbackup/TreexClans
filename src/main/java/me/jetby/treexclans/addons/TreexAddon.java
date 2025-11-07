@@ -42,8 +42,7 @@ public abstract class TreexAddon {
                 parent.log(level, prefix + msg, thrown);
             }
         };
-        this.dataFolder = serviceManager.getDataFolder(); //TODO
-        if (!dataFolder.exists()) dataFolder.mkdirs();
+        this.dataFolder = serviceManager.getDataFolder();
     }
 
     public abstract void onEnable();

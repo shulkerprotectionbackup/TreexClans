@@ -22,6 +22,7 @@ public class ServiceManagerImpl implements ServiceManager {
     public ServiceManagerImpl(IAddonManager addonManager, File dataFolder, JavaPlugin plugin, TreexAddonInfo addon) {
         this.addonManager = addonManager;
         this.dataFolder = new File(dataFolder, addon.id());
+        if (!dataFolder.exists()) dataFolder.mkdirs();
         this.plugin = plugin;
         this.serviceConfiguration = new ServiceConfigurationImpl(this);
         this.addon = addon;
