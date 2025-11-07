@@ -52,6 +52,8 @@ public class ReloadSubcommand implements Subcommand {
             QuestsLoader questsLoader = new QuestsLoader();
             questsLoader.load();
             plugin.setQuestsLoader(questsLoader);
+
+            plugin.getAddonManager().unloadAll();
             plugin.getAddonManager().loadAddons();
 
             plugin.getStorage().load();

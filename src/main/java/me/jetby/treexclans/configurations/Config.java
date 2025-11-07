@@ -39,6 +39,8 @@ public class Config {
     private Rank defaultRank;
     private Rank leaderRank;
 
+    private boolean debug;
+
     private String chatFormat;
 
     private String prefixPlaceholder_hasPrefix;
@@ -78,6 +80,8 @@ public class Config {
         blockedTags = null;
         defaultRanks.clear();
         levels.clear();
+
+        debug = configuration.getBoolean("debug", false);
 
         ConfigurationSection prefix = configuration.getConfigurationSection("prefix");
         if (prefix == null) prefix = configuration.createSection("prefix");

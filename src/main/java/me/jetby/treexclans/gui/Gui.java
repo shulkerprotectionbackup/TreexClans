@@ -203,12 +203,12 @@ public abstract class Gui extends PaginatedAdvancedGui implements Listener {
                         ItemStack itemStack = finalSelectedButton.itemStack().clone();
                         ItemWrapper wrapper = new ItemWrapper(itemStack);
 
-                        wrapper.displayName(BetterColorize.component(Papi.setPapi(player, applyDefaultPlaceholders(finalSelectedButton.displayName()))));
+                        wrapper.displayName(Colorize.text(Papi.setPapi(player, applyDefaultPlaceholders(finalSelectedButton.displayName()))));
                         List<String> processedLore = finalSelectedButton.lore().stream()
                                 .map(this::applyDefaultPlaceholders)
                                 .map(l -> Papi.setPapi(player, l))
                                 .toList();
-                        wrapper.lore(BetterColorize.component(processedLore));
+                        wrapper.lore(Colorize.list(processedLore));
                         wrapper.customModelData(finalSelectedButton.customModelData());
                         wrapper.enchanted(finalSelectedButton.enchanted());
                         wrapper.update();
