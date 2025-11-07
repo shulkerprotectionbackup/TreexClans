@@ -2,6 +2,7 @@ config-version: 2
 
 lang: ru
 
+debug: true
 
 clan-create:
 

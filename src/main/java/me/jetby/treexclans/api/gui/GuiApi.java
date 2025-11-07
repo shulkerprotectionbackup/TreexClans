@@ -48,11 +48,9 @@ public class GuiApi {
      */
     public void registerGui(@NotNull String guiType, @NotNull IGuiFactory factory) {
         if (registeredGuis.containsKey(guiType.toUpperCase())) {
-            TreexClans.LOGGER.warn("GUI type '" + guiType + "' is already registered!");
             return;
         }
         registeredGuis.put(guiType.toUpperCase(), factory);
-        TreexClans.LOGGER.success("GUI type '" + guiType + "' registered successfully!");
     }
 
     /**
@@ -62,7 +60,6 @@ public class GuiApi {
      */
     public void unregisterGui(@NotNull String guiType) {
         registeredGuis.remove(guiType.toUpperCase());
-        TreexClans.LOGGER.success("GUI type '" + guiType + "' unregistered successfully!");
     }
 
     /**
@@ -104,7 +101,6 @@ public class GuiApi {
                          Object... customObjects) {
         IGuiFactory factory = getGuiFactory(guiType);
         if (factory == null) {
-            TreexClans.LOGGER.warn("GUI type '" + guiType + "' is not registered!");
             return null;
         }
         return factory.create(plugin, menu, player, clan, customObjects);

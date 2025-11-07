@@ -1,4 +1,4 @@
-package me.jetby.treexclans.addons.exemple;
+package me.jetby.treexclans.addons.example;
 
 import me.jetby.treexclans.addons.TreexAddon;
 import me.jetby.treexclans.addons.annotations.Dependency;

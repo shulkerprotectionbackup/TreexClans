@@ -2,6 +2,7 @@ package me.jetby.treexclans.gui.core;
 
 import com.jodexindustries.jguiwrapper.api.item.ItemWrapper;
 import com.jodexindustries.jguiwrapper.gui.advanced.GuiItemController;
+import me.jetby.treex.text.BetterColorize;
 import me.jetby.treex.text.Colorize;
 import me.jetby.treexclans.TreexClans;
 import me.jetby.treexclans.clan.Clan;
@@ -71,7 +72,6 @@ public class ChestGui extends Gui {
             }
         }
     }
-
     private void setupItemsPages() {
         List<Button> itemButtons = getMenu().buttons().stream()
                 .filter(b -> "item".equals(b.type()) || "chest".equals(b.type()))
@@ -101,11 +101,9 @@ public class ChestGui extends Gui {
                     consumers[i] = builder -> {
                         builder.slots(guiSlot);
                         ItemWrapper barrier = ItemWrapper.builder(blockedSlot.itemStack().getType())
-                                .displayName(Colorize.text(blockedSlot.displayName(), true))
-                                .lore(Colorize.list(blockedSlot.lore(), true))
+                                .displayName(BetterColorize.component(blockedSlot.displayName()))
+                                .lore(BetterColorize.component((blockedSlot.lore())))
                                 .build();
-                        barrier.displayName(Colorize.text(blockedSlot.displayName(), true));
-                        barrier.lore(Colorize.list(blockedSlot.lore(), true));
 
                         ItemMeta meta = barrier.itemStack().getItemMeta();
                         if (meta != null) {

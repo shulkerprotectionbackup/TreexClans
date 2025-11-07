@@ -4,6 +4,7 @@ import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import me.jetby.treex.text.Colorize;
 import me.jetby.treex.text.Papi;
+import me.jetby.treexclans.TreexClans;
 import me.jetby.treexclans.functions.glow.Equipment;
 import me.jetby.treexclans.gui.requirements.ClickRequirement;
 import me.jetby.treexclans.gui.requirements.ViewRequirement;
@@ -25,7 +26,6 @@ import java.util.*;
 
 import static me.jetby.treexclans.TreexClans.LOGGER;
 
-@RequiredArgsConstructor
 public class GuiLoader {
 
     @Getter
@@ -33,8 +33,15 @@ public class GuiLoader {
     @Getter
     private final Map<UUID, Gui> guis = new HashMap<>();
 
-    private final JavaPlugin plugin;
+    private final TreexClans plugin;
     private final File file;
+    private final boolean debug;
+
+    public GuiLoader(TreexClans plugin, File file) {
+        this.plugin = plugin;
+        this.file = file;
+        this.debug = plugin.getCfg().isDebug();
+    }
 
     public void load() {
 
@@ -43,7 +50,6 @@ public class GuiLoader {
         File folder = new File(file, "Menu");
 
 
-        LOGGER.success("------------------------");
         if (!folder.exists() && folder.mkdirs()) {
             String[] defaults = {
                     "main.yml", "quests.yml", "members.yml", "choose-player-color.yml",
@@ -55,12 +61,12 @@ public class GuiLoader {
 
                 if (!target.exists()) {
                     plugin.saveResource("Menu/" + name, false);
-                    LOGGER.info("The Menu/" + name + " created");
                 }
 
                 FileConfiguration config = YamlConfiguration.loadConfiguration(target);
                 loadMenu(config.getString("id"), target);
             }
+            return;
         }
 
         File[] files = folder.listFiles();
@@ -69,12 +75,10 @@ public class GuiLoader {
                 if (!file.getName().endsWith(".yml")) continue;
                 FileConfiguration config = YamlConfiguration.loadConfiguration(file);
                 loadMenu(config.getString("id", file.getName().replace(".yml", "")), file);
-                LOGGER.info(file.getName() + " (id: " + config.getString("id") + ")" + " loaded");
+                if (debug) LOGGER.info(file.getName() + " (id: " + config.getString("id") + ")" + " loaded");
             }
         }
-        LOGGER.success("------------------------");
         LOGGER.success(menus.size() + " menus has been founded");
-        LOGGER.success("------------------------");
     }
 
     private void loadMenu(String menuId, File file) {
@@ -86,7 +90,7 @@ public class GuiLoader {
         try {
             FileConfiguration config = YamlConfiguration.loadConfiguration(file);
 
-            String title = Colorize.text(config.getString("title"), true);
+            String title = config.getString("title");
             String type = config.getString("listen", "default").toUpperCase();
             int size = config.getInt("size", 27);
             String permission = config.getString("open_permission");
