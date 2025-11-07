@@ -23,7 +23,6 @@ public final class TestAddon extends TreexAddon {
     @Override
     public void onEnable() {
         this.getLogger().info("Test enabled!");
-
     }
 
     @Override
